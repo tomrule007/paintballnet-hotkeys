@@ -1,0 +1,20 @@
+{
+  "name": "paintballnet-hotkeys",
+  "version": "1.0.0",
+  "description": "Bookmarklet that allows users to create hotkeys for paintballnet.net",
+  "main": "index.js",
+  "scripts": {
+    "build": "bookmarklet -d ./src/index.js ./build/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "paintballnet",
+    "hotkey",
+    "bookmarklet"
+  ],
+  "author": "Thomas Herzog",
+  "license": "ISC",
+  "dependencies": {
+    "bookmarklet": "^1.0.4"
+  }
+}
