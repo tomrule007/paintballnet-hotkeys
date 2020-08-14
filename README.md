@@ -17,7 +17,7 @@ Bookmarklet that allows users to create hotkeys for paintballnet.net",
 
 ## Using Bookmarklet
 
-\*Link to current build [bookmarklet page](https://github.com/tomrule007/paintballnet-hotkeys/build/index.html)
+\*Link to current build [bookmarklet page](https://tomrule007.github.io/paintballnet-hotkeys/build/index.html)
 
 1. Open [http://paintballnet.net/play](http://paintballnet.net/play)
 2. Click `PBN-Hotkeys` bookmark
