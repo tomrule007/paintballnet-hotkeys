@@ -4,7 +4,7 @@
   "description": "Bookmarklet that allows users to create hotkeys for paintballnet.net",
   "main": "index.js",
   "scripts": {
-    "build": "bookmarklet -d ./src/index.js ./build/index.html",
+    "build": "bookmarklet -d ./src/index.js ./build/index.html && date",
     "dev": "watch 'npm run build' src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
