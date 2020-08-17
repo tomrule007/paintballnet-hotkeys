@@ -3,6 +3,17 @@
 // @author Thomas Herzog
 // ==/Bookmarklet==
 // proxy the window.WebSocket object
+
+const savedHotkeys = {
+  // key shift alt ctrl meta : cmd or alias (no slash needed)
+  E1000: '1', // shift+E
+  e0000: '2', // e
+  R1000: 'game ready auto', // shift+R
+  r0000: 'reload', // r
+  q0000: 'swap & get gun back & put %lhand back', // q
+  Q1000: 'game ready standby', // shift+Q
+};
+
 function createWebSocketProxy() {
   var WebSocketProxy = new Proxy(window.WebSocket, {
     construct: function (target, args) {
@@ -53,35 +64,16 @@ function createWebSocketProxy() {
 
   // replace the native WebSocket with the proxy
   window.WebSocket = WebSocketProxy;
-  function keydown({ key, shiftKey, altKey, ctrlKey, metaKey }) {
-    const modifierKey = '' + +shiftKey + +altKey + +ctrlKey + +metaKey;
+}
+function createHotkeyListener(hotkeys) {
+  function handleKeydown({ key, shiftKey, altKey, ctrlKey, metaKey }) {
+    const hotkey = key + +shiftKey + +altKey + +ctrlKey + +metaKey;
 
-    switch (key + modifierKey) {
-      case 'E1000': // shift+E
-        sendPortal('{"id":"05","text":"1"}');
-        break;
-      case 'e0000': // e
-        sendPortal('{"id":"05","text":"1"}');
-        break;
-      case 'R1000': // shift+R
-        sendPortal('{"id":"05","text":"game ready auto"}');
-        break;
-      case 'r0000': // r
-        sendPortal('{"id":"05","text":"reload"}');
-        break;
-      case 'q0000': // q
-        sendPortal(
-          '{"id":"05","text":"swap & get gun back & put %lhand back"}'
-        );
-        break;
-      case 'Q1000': // shift+Q
-        sendPortal('{"id":"05","text":"game ready standby"}');
-        break;
-      default:
-        break;
+    if (hotkeys[hotkey]) {
+      sendPortal(`{"id":"05","text":"${hotkeys[hotkey]}"}`);
     }
   }
-  document.addEventListener('keydown', keydown);
+  document.addEventListener('keydown', handleKeydown);
 }
 
 function createUI() {
@@ -110,3 +102,4 @@ function setLinkEnabled() {
 
 createUI();
 createWebSocketProxy();
+createHotkeyListener(savedHotkeys);
