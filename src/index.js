@@ -20,43 +20,29 @@ function createWebSocketProxy() {
       // create WebSocket instance
       const instance = new target(...args);
 
-      // WebSocket "onopen" handler
-      const openHandler = (event) => {
-        console.log('Open', event);
-        // Currently assumes any websocket 'open' event is the paintballnet server.
-        setLinkEnabled();
-      };
-
-      // WebSocket "onmessage" handler
-      const messageHandler = (event) => {
-        console.log('Message', event);
-      };
-
-      // WebSocket "onclose" handler
       const closeHandler = (event) => {
-        // console.log('Close', event);
         // remove event listeners
-        instance.removeEventListener('open', openHandler);
-        instance.removeEventListener('message', messageHandler);
+        instance.removeEventListener('open', setLinkEnabled);
         instance.removeEventListener('close', closeHandler);
       };
 
       // add event listeners
-      instance.addEventListener('open', openHandler);
-      instance.addEventListener('message', messageHandler);
+      instance.addEventListener('open', setLinkEnabled);
       instance.addEventListener('close', closeHandler);
 
       // proxy the WebSocket.send() function
       const sendProxy = new Proxy(instance.send, {
         apply: function (target, thisArg, args) {
-          // console.log('target', target, 'thisArg', thisArg, 'Send', args);
           target.apply(thisArg, args);
         },
       });
 
       // replace the native send function with the proxy
       instance.send = sendProxy;
+
+      // Add global reference to websocket send function
       window.sendPortal = instance.send.bind(instance);
+
       // return the WebSocket instance
       return instance;
     },
