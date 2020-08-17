@@ -68,8 +68,10 @@ function createWebSocketProxy() {
 function createHotkeyListener(hotkeys) {
   function handleKeydown({ key, shiftKey, altKey, ctrlKey, metaKey }) {
     const hotkey = key + +shiftKey + +altKey + +ctrlKey + +metaKey;
-
-    if (hotkeys[hotkey]) {
+    const chatboxIsNotActive = !(
+      window.Component592 === document.activeElement
+    );
+    if (chatboxIsNotActive && hotkeys[hotkey]) {
       sendPortal(`{"id":"05","text":"${hotkeys[hotkey]}"}`);
     }
   }
