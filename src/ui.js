@@ -64,6 +64,10 @@ hotkeys by tomrule007`;
   Object.entries(savedHotkeys).forEach(([hotkey, command]) => {
     createHotkeyCard(hotkey, command);
   });
+
+  return {
+    setLinkEnabled,
+  };
 }
 
 const DEFAULT_COMMAND_TEXT = 'Click to enter command';
