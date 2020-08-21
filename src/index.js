@@ -20,6 +20,10 @@ function createHotkeyListener(hotkeys) {
   document.addEventListener('keydown', handleKeydown);
 }
 
-createUI();
-createWebSocketProxy();
+const ui = createUI();
+createWebSocketProxy((...args) => {
+  console.log(args);
+  ui.setLinkEnabled();
+});
 createHotkeyListener(savedHotkeys);
+console.log('ENDD');
