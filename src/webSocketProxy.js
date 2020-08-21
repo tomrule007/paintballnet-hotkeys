@@ -1,4 +1,4 @@
-export function createWebSocketProxy() {
+export function createWebSocketProxy(openConnectionCallback) {
   var WebSocketProxy = new Proxy(window.WebSocket, {
     construct: function (target, args) {
       // create WebSocket instance
@@ -6,12 +6,12 @@ export function createWebSocketProxy() {
 
       const closeHandler = (event) => {
         // remove event listeners
-        instance.removeEventListener('open', setLinkEnabled);
+        instance.removeEventListener('open', openConnectionCallback);
         instance.removeEventListener('close', closeHandler);
       };
 
       // add event listeners
-      instance.addEventListener('open', setLinkEnabled);
+      instance.addEventListener('open', openConnectionCallback);
       instance.addEventListener('close', closeHandler);
 
       // proxy the WebSocket.send() function
