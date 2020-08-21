@@ -1,8 +1,8 @@
+import { savedHotkeys } from './savedHotkeys';
 export function createUI() {
   //Menu link
   const a = document.createElement('a');
-  const linkText = document.createTextNode('PBN-Hotkeys');
-  a.appendChild(linkText);
+  a.appendChild(document.createTextNode('PBN-Hotkeys'));
   a.title = `red = not connected
 black = connected
 hotkeys by tomrule007`;
@@ -19,72 +19,98 @@ hotkeys by tomrule007`;
 
   document.body.appendChild(a);
 
-  //Main menu
-  const menuTemplate = document.createElement('template');
+  //Hotkey Setup Menu
+  const menuDiv = document.createElement('div');
+  menuDiv.id = 'pbnHotkeysMenu';
+  menuDiv.classList.add(
+    'TW3Panel',
+    'TW3ContainerBorder',
+    'TW3ContainerBackground'
+  );
+  menuDiv.style.cssText =
+    'z-index: 8; right: 2px; top: 40px; position: fixed; display: none;';
 
-  menuTemplate.innerHTML = `
-<div class="TW3Panel TW3ContainerBorder TW3ContainerBackground"
-style="z-index: 8; display: inline-block; overflow: hidden;
-right: 2px; top: 40px; position: fixed; width: 350px; height: 53px;">
-    <div class="TW3Label"
-    style="z-index: 1; display: inline-block; overflow: hidden;
-    left: 2px; top: 2px; position: absolute; width: 257px; height: 18px;">
-        <div class="lbxcontent lbxcontent_h_left lbxdisableBreak lbxcontent_v_top">Paintballnet-Hotkeys</div>
-    </div>
-    <div class="TPBTListBox"
-    style="z-index: 2; display: inline-block; overflow: hidden;
-    left: 2px; top: 25px; position: absolute; width: 344px; height: 24px;">
-        <div id="Component157" class="TW3ScrollContainer"
-        style="z-index: 1; display: inline-block; overflow: hidden;
-        left: 0px; top: 0px; position: absolute; width: 342px; height: 22px;">
-            <div class="TPBTListBoxVisibleItems"
-            style="z-index: 1; display: inline-block; overflow: hidden;
-            left: 0px; top: 0px; position: absolute; will-change: transform; transform: translate(0px, 0px);
-            width: 342px; height: 22px;">
-                <div class="TPBTListBoxMonoSpaceItem TPBTListBoxItem"
-                style="z-index: 22; display: inline-block; overflow: hidden;
-                left: 0px; top: 0px; position: absolute; width: 342px;">
-                    <span>tomrule007               |standby   | 1904|5| |Marauders</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <button class="TW3Button TW3ButtonBackground TW3ButtonBorder" 
-    style="z-index: 3; display: inline-block; overflow: hidden; 
-    left: 333px; top: 2px; position: absolute; font-size: 8pt; width: 13px; height: 18px;">X</button>
-</div>`;
+  // menu label
+  const menuLabelEl = document.createElement('span');
+  menuLabelEl.append(
+    document.createTextNode('Paintballnet-Hotkeys by tomrule007')
+  );
+  menuLabelEl.classList.add('tw3label');
+  menuDiv.append(menuLabelEl);
 
-  //menuContainer.id = 'pbnHotkeysMenu';
-  document.body.appendChild(menuTemplate.content);
+  // menu content container
+  const menuContentEl = document.createElement('div');
+  menuContentEl.id = 'pbnHotkeyMenuDisplay';
+  menuContentEl.classList.add('TPBTListBox');
+  menuContentEl.style.cssText =
+    'font-family: Lucida Console; font-size: 10pt; padding: 2px;';
+
+  // menu close button
+  const closeButtonEl = document.createElement('button');
+  closeButtonEl.append(document.createTextNode('X'));
+  closeButtonEl.classList.add(
+    'TW3Button',
+    'TW3ButtonBackground',
+    'TW3ButtonBorder'
+  );
+  closeButtonEl.style.cssText =
+    'right: 2px; top: 2px; position: absolute; font-size: 8pt;';
+  closeButtonEl.onclick = () => showMenu(false);
+
+  menuDiv.append(menuLabelEl, closeButtonEl, menuContentEl);
+
+  document.body.appendChild(menuDiv);
+
+  Object.entries(savedHotkeys).forEach(([hotkey, command]) => {
+    createHotkeyCard(hotkey, command);
+  });
 }
 
-function createHotkey(hotkey) {
-  const hotkeyWidget = document.createElement('div');
-  const hotkeyText = document.createTextNode(hotkey);
-  hotkeyWidget.appendChild(hotkeyText);
-  // menu.id = 'pbnHotkeysMenu';
-  // menu.style.cssText = `position: fixed;
-  //                    z-index: 1000;
-  //                    text-align: center;
-  //                    border: solid black 1px;
-  //                    width: 200px;
-  //                    height: 200px;
-  //                    margin: auto;
-  //                    top: 50%;
-  //                    left: 50%;
-  //                    transform: translate(-50%, -50%);
-  //                    display: none;
-  //                    `;
-  pbnHotkeysMenu.appendChild(hotkeyWidget);
-  //hotkey key
-  //hotkey command
-  //hotkey edit button
-  //hotkey save button
+const DEFAULT_COMMAND_TEXT = 'Click to enter command';
+function commandSpanOnFocus() {
+  // Clear default text on focus
+  if (this.innerText === DEFAULT_COMMAND_TEXT) {
+    this.innerText = '';
+  }
 }
-window.pbnHotkeysCapture = false;
+function commandSpanOnBlur() {
+  // Remove all line breaks.
+  this.childNodes.forEach((child) => {
+    if (child.tagName === 'BR') {
+      this.removeChild(child);
+    }
+  }, this);
+
+  // Reset default text if blank
+  if (this.innerText === '') {
+    this.innerText = DEFAULT_COMMAND_TEXT;
+  }
+}
+function createHotkeyCard(hotkey, command) {
+  const hotkeyCard = document.createElement('div');
+  const hotkeyDivEl = document.createElement('div');
+  hotkeyDivEl.style.cssText =
+    'display: inline-block; minWidth: 50px; textAlign: right; margin: 0px 2px';
+
+  const hotkeyEl = document.createElement('a');
+  hotkeyEl.append(document.createTextNode(hotkey));
+  hotkeyDivEl.append(hotkeyEl);
+  const hotkeyCommandEl = document.createElement('span');
+  hotkeyCommandEl.append(document.createTextNode(command));
+  hotkeyCommandEl.style.outline = 'none';
+  hotkeyCommandEl.style.display = 'inline-block';
+
+  hotkeyCommandEl.contentEditable = true;
+  hotkeyCommandEl.onfocus = commandSpanOnFocus;
+  hotkeyCommandEl.onblur = commandSpanOnBlur;
+
+  hotkeyCard.append(hotkeyDivEl, hotkeyCommandEl);
+
+  window.pbnHotkeyMenuDisplay.appendChild(hotkeyCard);
+}
+
 function showMenu(setVisible) {
   pbnHotkeysMenu.style.display = setVisible ? 'block' : 'none';
-  window.pbnHotkeysCapture = true;
 }
 function setLinkEnabled() {
   pbnHotkeysLink.style.color = 'black';
