@@ -13,6 +13,13 @@ function createHotkeyListener(hotkeys) {
     const chatboxIsNotActive = !(
       window.Component592 === document.activeElement
     );
+
+    if (window.setHotkeyActive) {
+      console.log('key capture', hotkey, 'activeHotkeyCard', setHotkeyActive);
+      window.hotkeySetContainer.childNodes[1].innerText = hotkey;
+      return;
+    }
+
     if (chatboxIsNotActive && hotkeys[hotkey]) {
       sendPortal(`{"id":"05","text":"${hotkeys[hotkey]}"}`);
     }

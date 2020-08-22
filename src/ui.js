@@ -31,19 +31,20 @@ hotkeys by tomrule007`;
     'z-index: 8; right: 2px; top: 40px; position: fixed; display: none;';
 
   // menu label
+  const menuBarDiv = document.createElement('div');
+  menuBarDiv.style.cssText = 'display: flex; justify-content:	space-between;';
   const menuLabelEl = document.createElement('span');
   menuLabelEl.append(
     document.createTextNode('Paintballnet-Hotkeys by tomrule007')
   );
   menuLabelEl.classList.add('tw3label');
-  menuDiv.append(menuLabelEl);
 
   // menu content container
   const menuContentEl = document.createElement('div');
   menuContentEl.id = 'pbnHotkeyMenuDisplay';
   menuContentEl.classList.add('TPBTListBox');
   menuContentEl.style.cssText =
-    'font-family: Lucida Console; font-size: 10pt; padding: 2px;';
+    'margin: 5px 2px; font-family: Lucida Console; font-size: 10pt; padding: 2px;';
 
   // menu close button
   const closeButtonEl = document.createElement('button');
@@ -53,17 +54,34 @@ hotkeys by tomrule007`;
     'TW3ButtonBackground',
     'TW3ButtonBorder'
   );
-  closeButtonEl.style.cssText =
-    'right: 2px; top: 2px; position: absolute; font-size: 8pt;';
+  closeButtonEl.style.cssText = 'margin: 2px; font-size: 8pt;';
   closeButtonEl.onclick = () => showMenu(false);
 
-  menuDiv.append(menuLabelEl, closeButtonEl, menuContentEl);
+  //save changes button
+  const saveButton = document.createElement('button');
+  saveButton.append(document.createTextNode('Save Changes'));
+  saveButton.classList.add(
+    'TW3Button',
+    'TW3ButtonBackground',
+    'TW3ButtonBorder'
+  );
+  saveButton.style.cssText = 'margin: 2px; font-size: 8pt;';
+  saveButton.onclick = () => showMenu(false);
+
+  const saveButtonContainerEl = document.createElement('div');
+  saveButtonContainerEl.style.display = 'flex';
+  saveButtonContainerEl.style.justifyContent = 'center';
+
+  menuBarDiv.append(menuLabelEl, closeButtonEl);
+  saveButtonContainerEl.append(saveButton);
+  menuDiv.append(menuBarDiv, menuContentEl, saveButtonContainerEl);
 
   document.body.appendChild(menuDiv);
 
   Object.entries(savedHotkeys).forEach(([hotkey, command]) => {
     createHotkeyCard(hotkey, command);
   });
+  createHotkeyCard('Click to set', '');
 
   return {
     setLinkEnabled,
@@ -91,13 +109,16 @@ function commandSpanOnBlur() {
   }
 }
 function createHotkeyCard(hotkey, command) {
+  const hotkeyCardContainer = document.createElement('div');
   const hotkeyCard = document.createElement('div');
+  hotkeyCard.style.position = 'relative';
   const hotkeyDivEl = document.createElement('div');
   hotkeyDivEl.style.cssText =
     'display: inline-block; minWidth: 50px; textAlign: right; margin: 0px 2px';
 
   const hotkeyEl = document.createElement('a');
   hotkeyEl.append(document.createTextNode(hotkey));
+  hotkeyEl.onclick = setHotkeyClickHandler;
   hotkeyDivEl.append(hotkeyEl);
   const hotkeyCommandEl = document.createElement('span');
   hotkeyCommandEl.append(document.createTextNode(command));
@@ -108,9 +129,10 @@ function createHotkeyCard(hotkey, command) {
   hotkeyCommandEl.onfocus = commandSpanOnFocus;
   hotkeyCommandEl.onblur = commandSpanOnBlur;
 
+  hotkeyCardContainer.append(hotkeyCard);
   hotkeyCard.append(hotkeyDivEl, hotkeyCommandEl);
 
-  window.pbnHotkeyMenuDisplay.appendChild(hotkeyCard);
+  window.pbnHotkeyMenuDisplay.appendChild(hotkeyCardContainer);
 }
 
 function showMenu(setVisible) {
@@ -118,4 +140,79 @@ function showMenu(setVisible) {
 }
 function setLinkEnabled() {
   pbnHotkeysLink.style.color = 'black';
+}
+
+function saveUpdatedHotkey(e) {
+  console.log(
+    this,
+    e,
+    window.hotkeySetContainer.childNodes[1].innerText,
+    window.setHotkeyActive,
+    window.setHotkeyActive.childNodes[0].childNodes[0]
+  );
+  const newHotkey = window.hotkeySetContainer.childNodes[1].innerText;
+  if (newHotkey) {
+    window.setHotkeyActive.childNodes[0].childNodes[0].innerText = newHotkey;
+  }
+  window.hotkeySetContainer.remove();
+  window.setHotkeyActive.style.border = '';
+  window.setHotkeyActive = undefined;
+}
+
+function deleteHotkey(e) {
+  console.log(this, e);
+}
+
+function setHotkeyClickHandler(e) {
+  console.log('GOO');
+  if (!window.hotkeySetContainer) {
+    console.log('create new div');
+    // create new div
+    const hotkeySetContainer = document.createElement('div');
+    window.hotkeySetContainer = hotkeySetContainer;
+    hotkeySetContainer.style.cssText =
+      'display: flex; text-align: center; font-weight: bold; background: white;';
+    const hotkeySetText = document.createTextNode(
+      'Press key to set new hotkey:'
+    );
+    const hotkeyDiv = document.createElement('div');
+    hotkeyDiv.style.flex = '1 1';
+    const saveHotkeyButton = document.createElement('button');
+    saveHotkeyButton.append(document.createTextNode('Save'));
+    saveHotkeyButton.classList.add(
+      'TW3Button',
+      'TW3ButtonBackground',
+      'TW3ButtonBorder'
+    );
+    saveHotkeyButton.style.cssText = 'font-size: 8pt;';
+    saveHotkeyButton.onclick = saveUpdatedHotkey;
+
+    const deleteHotkeyButton = document.createElement('button');
+    deleteHotkeyButton.append(document.createTextNode('Delete'));
+    deleteHotkeyButton.classList.add(
+      'TW3Button',
+      'TW3ButtonBackground',
+      'TW3ButtonBorder'
+    );
+    deleteHotkeyButton.style.cssText = 'font-size: 8pt;';
+    deleteHotkeyButton.onclick = deleteHotkey;
+
+    hotkeySetContainer.append(
+      hotkeySetText,
+      hotkeyDiv,
+      saveHotkeyButton,
+      deleteHotkeyButton
+    );
+  }
+  const newParent = this.parentNode.parentNode;
+
+  //  reuse div
+  const oldParent = window.hotkeySetContainer.parentNode;
+  if (oldParent) {
+    oldParent.style.border = '';
+  }
+
+  newParent.append(window.hotkeySetContainer);
+  newParent.style.border = '1px solid black';
+  window.setHotkeyActive = newParent;
 }
