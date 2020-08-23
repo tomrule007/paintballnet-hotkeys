@@ -1,4 +1,5 @@
 import { savedHotkeys } from './savedHotkeys';
+import { pbnHotkeys } from './index';
 export function createUI() {
   //Menu link
   const a = document.createElement('a');
@@ -101,12 +102,9 @@ function getHotkeysFromMenu() {
   return newHotkeysAndCommands;
 }
 function saveChanges() {
-  console.log('SAVE CHANGES');
-  window.localStorage.setItem(
-    'pbn-hotkeys',
-    JSON.stringify(getHotkeysFromMenu())
-  );
-  console.log(JSON.parse(window.localStorage.getItem('pbn-hotkeys')));
+  const newHotkeys = getHotkeysFromMenu();
+  window.localStorage.setItem('pbn-hotkeys', JSON.stringify(newHotkeys));
+  pbnHotkeys.hotkeys = newHotkeys;
 }
 
 const DEFAULT_COMMAND_TEXT = 'Click to enter command';
