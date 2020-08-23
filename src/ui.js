@@ -66,7 +66,7 @@ hotkeys by tomrule007`;
     'TW3ButtonBorder'
   );
   saveButton.style.cssText = 'margin: 2px; font-size: 8pt;';
-  saveButton.onclick = () => showMenu(false);
+  saveButton.onclick = saveChanges;
 
   const saveButtonContainerEl = document.createElement('div');
   saveButtonContainerEl.style.display = 'flex';
@@ -86,6 +86,27 @@ hotkeys by tomrule007`;
   return {
     setLinkEnabled,
   };
+}
+function getHotkeysFromMenu() {
+  const menuContentDiv = document.getElementById('pbnHotkeysMenu')
+    .childNodes[1];
+  const newHotkeysAndCommands = Object.fromEntries(
+    Array.from(menuContentDiv.childNodes).map((hotkeyCardContainer) => {
+      const hotkeyCard = hotkeyCardContainer.childNodes[0];
+      const hotkey = hotkeyCard.childNodes[0].childNodes[0].innerText;
+      const command = hotkeyCard.childNodes[1].innerText;
+      return [hotkey, command];
+    })
+  );
+  return newHotkeysAndCommands;
+}
+function saveChanges() {
+  console.log('SAVE CHANGES');
+  window.localStorage.setItem(
+    'pbn-hotkeys',
+    JSON.stringify(getHotkeysFromMenu())
+  );
+  console.log(JSON.parse(window.localStorage.getItem('pbn-hotkeys')));
 }
 
 const DEFAULT_COMMAND_TEXT = 'Click to enter command';
