@@ -2,6 +2,19 @@ import { savedHotkeys } from './savedHotkeys';
 import { pbnHotkeys } from './index';
 export function createUI() {
   //Menu link
+  const menuLinkDiv = document.createElement('div');
+  menuLinkDiv.classList.add(
+    'TPBTOverlayScrollItem',
+    'TPBTOverlayScrollInfoItem'
+  );
+  menuLinkDiv.style.cssText = `position: fixed; 
+                     z-index: 1000;
+                     top: 2px;
+                     right: 2px;
+                     color: red;
+                     text-decoration: underline;
+                     cursor: pointer;
+                     `;
   const a = document.createElement('a');
   a.appendChild(document.createTextNode('PBN-Hotkeys'));
   a.title = `red = not connected
@@ -9,17 +22,9 @@ black = connected
 hotkeys by tomrule007`;
   a.id = 'pbnHotkeysLink';
   a.onclick = () => showMenu(true);
-  a.style.cssText = `position: fixed; 
-                     z-index: 1000;
-                     top: 0;
-                     right: 0;
-                     color: red;
-                     text-decoration: underline;
-                     cursor: pointer;
-                     `;
-
-  document.body.appendChild(a);
-
+  menuLinkDiv.append(a);
+  document.body.appendChild(menuLinkDiv);
+  console.log(menuLinkDiv);
   //Hotkey Setup Menu
   const menuDiv = document.createElement('div');
   menuDiv.id = 'pbnHotkeysMenu';
@@ -46,7 +51,7 @@ hotkeys by tomrule007`;
   menuContentEl.classList.add('TPBTListBox');
   menuContentEl.style.cssText =
     'margin: 5px 2px; font-family: Lucida Console; font-size: 10pt; padding: 2px;';
-
+  console.log(window.pbnHotkeyMenuDisplay);
   // menu close button
   const closeButtonEl = document.createElement('button');
   closeButtonEl.append(document.createTextNode('X'));
