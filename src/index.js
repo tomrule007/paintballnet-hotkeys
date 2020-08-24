@@ -4,22 +4,24 @@
 // ==/Bookmarklet==
 
 import { savedHotkeys } from './savedHotkeys';
-import { createUI } from './ui';
+import { createUI, hotkeyCodeToText } from './ui';
 import { createWebSocketProxy } from './webSocketProxy';
 
 export const pbnHotkeys = {
   hotkeys: savedHotkeys,
   createHotkeyListener() {
-    const handleKeydown = ({ key, shiftKey, altKey, ctrlKey, metaKey }) => {
-      console.log('what is this', this);
-      const hotkey = key + +shiftKey + +altKey + +ctrlKey + +metaKey;
+    const handleKeydown = ({ key, shiftKey, altKey, ctrlKey }) => {
+      const hotkey = key + +shiftKey + +altKey + +ctrlKey;
       const chatboxIsNotActive = !(
         window.Component592 === document.activeElement
       );
 
       if (window.setHotkeyActive) {
-        console.log('key capture', hotkey, 'activeHotkeyCard', setHotkeyActive);
-        window.hotkeySetContainer.childNodes[1].innerText = hotkey;
+        window.hotkeySetContainer.childNodes[1].dataset.hotkeyCode = hotkey;
+        window.hotkeySetContainer.childNodes[1].innerText = hotkeyCodeToText(
+          hotkey
+        );
+
         return;
       }
 
@@ -36,5 +38,5 @@ createWebSocketProxy((...args) => {
   console.log(args);
   ui.setLinkEnabled();
 });
-pbnHotkeys.createHotkeyListener(savedHotkeys);
+pbnHotkeys.createHotkeyListener();
 console.log('ENDD');

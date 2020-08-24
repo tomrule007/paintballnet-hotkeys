@@ -94,8 +94,9 @@ function getHotkeysFromMenu() {
   const newHotkeysAndCommands = Object.fromEntries(
     Array.from(menuContentDiv.childNodes).map((hotkeyCardContainer) => {
       const hotkeyCard = hotkeyCardContainer.childNodes[0];
-      const hotkey = hotkeyCard.childNodes[0].childNodes[0].innerText;
+      const hotkey = hotkeyCard.childNodes[0].childNodes[0].dataset.hotkeyCode;
       const command = hotkeyCard.childNodes[1].innerText;
+      console.log({ hotkey, command });
       return [hotkey, command];
     })
   );
@@ -129,14 +130,17 @@ function commandSpanOnBlur() {
 }
 function createHotkeyCard(hotkey, command) {
   const hotkeyCardContainer = document.createElement('div');
+  hotkeyCardContainer.style.cssText =
+    'margin: 2px; border-bottom: 1px solid grey;';
   const hotkeyCard = document.createElement('div');
   hotkeyCard.style.position = 'relative';
   const hotkeyDivEl = document.createElement('div');
   hotkeyDivEl.style.cssText =
-    'display: inline-block; minWidth: 50px; textAlign: right; margin: 0px 2px';
+    'display: inline-block; min-width: 60px; textAlign: right; margin: 0px 2px';
 
   const hotkeyEl = document.createElement('a');
-  hotkeyEl.append(document.createTextNode(hotkey));
+  hotkeyEl.dataset.hotkeyCode = hotkey;
+  hotkeyEl.append(document.createTextNode(hotkeyCodeToText(hotkey)));
   hotkeyEl.onclick = setHotkeyClickHandler;
   hotkeyDivEl.append(hotkeyEl);
   const hotkeyCommandEl = document.createElement('span');
@@ -162,24 +166,33 @@ function setLinkEnabled() {
 }
 
 function saveUpdatedHotkey(e) {
-  console.log(
-    this,
-    e,
-    window.hotkeySetContainer.childNodes[1].innerText,
-    window.setHotkeyActive,
-    window.setHotkeyActive.childNodes[0].childNodes[0]
-  );
   const newHotkey = window.hotkeySetContainer.childNodes[1].innerText;
+  const newHotkeyCode =
+    window.hotkeySetContainer.childNodes[1].dataset.hotkeyCode;
   if (newHotkey) {
     window.setHotkeyActive.childNodes[0].childNodes[0].innerText = newHotkey;
+    window.setHotkeyActive.childNodes[0].childNodes[0].dataset.hotkeyCode = newHotkeyCode;
+    window.hotkeySetContainer.remove();
+    window.setHotkeyActive.style.border = '';
+    window.setHotkeyActive.style.borderBottom = '';
+    window.setHotkeyActive = undefined;
   }
-  window.hotkeySetContainer.remove();
-  window.setHotkeyActive.style.border = '';
-  window.setHotkeyActive = undefined;
 }
 
 function deleteHotkey(e) {
-  console.log(this, e);
+  const hotkeyCardContainer = this.parentNode.parentNode.parentNode;
+
+  const hotkeyCard = hotkeyCardContainer.childNodes[0];
+  const hotkey = hotkeyCard.childNodes[0].childNodes[0].innerText;
+  const command = hotkeyCard.childNodes[1].innerText;
+  const confirmDelete = confirm(
+    `Confirm deletion of selected hotkey: 
+    ${hotkey}:   ${command}`
+  );
+  if (confirmDelete) {
+    window.setHotkeyActive = undefined;
+    hotkeyCardContainer.remove();
+  }
 }
 
 function setHotkeyClickHandler(e) {
@@ -191,9 +204,7 @@ function setHotkeyClickHandler(e) {
     window.hotkeySetContainer = hotkeySetContainer;
     hotkeySetContainer.style.cssText =
       'display: flex; text-align: center; font-weight: bold; background: white;';
-    const hotkeySetText = document.createTextNode(
-      'Press key to set new hotkey:'
-    );
+    const hotkeySetText = document.createTextNode('New hotkey:');
     const hotkeyDiv = document.createElement('div');
     hotkeyDiv.style.flex = '1 1';
     const saveHotkeyButton = document.createElement('button');
@@ -229,9 +240,27 @@ function setHotkeyClickHandler(e) {
   const oldParent = window.hotkeySetContainer.parentNode;
   if (oldParent) {
     oldParent.style.border = '';
+    oldParent.style.borderBottom = '1px solid grey';
   }
 
   newParent.append(window.hotkeySetContainer);
   newParent.style.border = '1px solid black';
   window.setHotkeyActive = newParent;
+}
+
+export function hotkeyCodeToText(hotkey) {
+  const [shiftKey, altKey, ctrlKey] = hotkey
+    .slice(-3)
+    .split('')
+    .map((keyString) => Boolean(+keyString));
+
+  const key = hotkey.slice(0, -3);
+  // TODO: add OS specific names
+  // Example: Alt == Option on macs
+  return (
+    (shiftKey & (key !== 'Shift') ? 'Shift+' : '') +
+    (altKey & (key !== 'Alt') ? 'Alt+' : '') +
+    (ctrlKey & (key !== 'Control') ? 'Ctrl+' : '') +
+    key
+  );
 }
