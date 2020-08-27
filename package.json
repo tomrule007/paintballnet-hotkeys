@@ -7,7 +7,7 @@
     "bookmark": "bookmarklet -d ./dist/main.js ./build/index.html && date",
     "dev": "concurrently \"webpack --watch\" \"watch 'npm run bookmark' dist\" \"live-server build/index.html\"",
     "build": "webpack && npm run bookmark",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [
     "paintballnet",
