@@ -1,0 +1,213 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateUI() Generates UI to matches snapshot 1`] = `
+<body>
+  <div>
+     
+  </div>
+  <div
+    class="TPBTOverlayScrollItem TPBTOverlayScrollInfoItem"
+    style="position: fixed; z-index: 1000; top: 2px; right: 2px; color: red; text-decoration: underline; cursor: pointer;"
+  >
+    <a
+      id="pbnHotkeysLink"
+      title="red = not connected
+black = connected
+hotkeys by tomrule007"
+    >
+      PBN-Hotkeys
+    </a>
+  </div>
+  <div
+    class="TW3Panel TW3ContainerBorder TW3ContainerBackground"
+    id="pbnHotkeysMenu"
+    style="z-index: 8; right: 2px; top: 40px; position: fixed; display: none;"
+  >
+    <div
+      style="display: flex; justify-content: space-between;"
+    >
+      <span
+        class="tw3label"
+      >
+        Paintballnet-Hotkeys by tomrule007
+      </span>
+      <button
+        class="TW3Button TW3ButtonBackground TW3ButtonBorder"
+        style="margin: 2px; font-size: 8pt;"
+      >
+        X
+      </button>
+    </div>
+    <div
+      class="TPBTListBox"
+      id="pbnHotkeyMenuDisplay"
+      style="margin: 5px 2px; font-family: Lucida Console; font-size: 10pt; padding: 2px;"
+    >
+      <div
+        style="margin: 2px; border-bottom: 1px solid grey;"
+      >
+        <div
+          style="position: relative;"
+        >
+          <div
+            style="display: inline-block; min-width: 60px; margin: 0px 2px;"
+          >
+            <a
+              data-hotkey-code="E100"
+            >
+              Shift+E
+            </a>
+          </div>
+          <span
+            style="outline: none; display: inline-block;"
+          >
+            get token jacket & sell token & get flag jacket & sell flag
+          </span>
+        </div>
+      </div>
+      <div
+        style="margin: 2px; border-bottom: 1px solid grey;"
+      >
+        <div
+          style="position: relative;"
+        >
+          <div
+            style="display: inline-block; min-width: 60px; margin: 0px 2px;"
+          >
+            <a
+              data-hotkey-code="e000"
+            >
+              e
+            </a>
+          </div>
+          <span
+            style="outline: none; display: inline-block;"
+          >
+            get token & get flag & put token jacket & put flag jacket
+          </span>
+        </div>
+      </div>
+      <div
+        style="margin: 2px; border-bottom: 1px solid grey;"
+      >
+        <div
+          style="position: relative;"
+        >
+          <div
+            style="display: inline-block; min-width: 60px; margin: 0px 2px;"
+          >
+            <a
+              data-hotkey-code="R100"
+            >
+              Shift+R
+            </a>
+          </div>
+          <span
+            style="outline: none; display: inline-block;"
+          >
+            game ready auto
+          </span>
+        </div>
+      </div>
+      <div
+        style="margin: 2px; border-bottom: 1px solid grey;"
+      >
+        <div
+          style="position: relative;"
+        >
+          <div
+            style="display: inline-block; min-width: 60px; margin: 0px 2px;"
+          >
+            <a
+              data-hotkey-code="r000"
+            >
+              r
+            </a>
+          </div>
+          <span
+            style="outline: none; display: inline-block;"
+          >
+            reload
+          </span>
+        </div>
+      </div>
+      <div
+        style="margin: 2px; border-bottom: 1px solid grey;"
+      >
+        <div
+          style="position: relative;"
+        >
+          <div
+            style="display: inline-block; min-width: 60px; margin: 0px 2px;"
+          >
+            <a
+              data-hotkey-code="q000"
+            >
+              q
+            </a>
+          </div>
+          <span
+            style="outline: none; display: inline-block;"
+          >
+            swap & get gun back & put %lhand back
+          </span>
+        </div>
+      </div>
+      <div
+        style="margin: 2px; border-bottom: 1px solid grey;"
+      >
+        <div
+          style="position: relative;"
+        >
+          <div
+            style="display: inline-block; min-width: 60px; margin: 0px 2px;"
+          >
+            <a
+              data-hotkey-code="Q100"
+            >
+              Shift+Q
+            </a>
+          </div>
+          <span
+            style="outline: none; display: inline-block;"
+          >
+            game ready standby
+          </span>
+        </div>
+      </div>
+      <div
+        style="margin: 2px; border-bottom: 1px solid grey;"
+      >
+        <div
+          style="position: relative;"
+        >
+          <div
+            style="display: inline-block; min-width: 60px; margin: 0px 2px;"
+          >
+            <a
+              data-hotkey-code="Click to set"
+            >
+              Click to 
+            </a>
+          </div>
+          <span
+            style="outline: none; display: inline-block;"
+          >
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; justify-content: center;"
+    >
+      <button
+        class="TW3Button TW3ButtonBackground TW3ButtonBorder"
+        style="margin: 2px; font-size: 8pt;"
+      >
+        Save Changes
+      </button>
+    </div>
+  </div>
+</body>
+`;
