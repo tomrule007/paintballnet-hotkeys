@@ -2,7 +2,7 @@
   "name": "paintballnet-hotkeys",
   "version": "1.1.0",
   "description": "Bookmarklet that allows users to create hotkeys for paintballnet.net",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "bookmark": "bookmarklet -d ./dist/main.js ./build/index.html && date",
     "dev": "concurrently \"webpack --watch\" \"watch 'npm run bookmark' dist\" \"live-server build/index.html\"",

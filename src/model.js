@@ -11,3 +11,8 @@ const defaultHotkeys = JSON.stringify({
 export let savedHotkeys = JSON.parse(
   window.localStorage.getItem('pbn-hotkeys') || defaultHotkeys
 );
+export class Model {
+  constructor() {
+    this.hotkeys = savedHotkeys;
+  }
+}

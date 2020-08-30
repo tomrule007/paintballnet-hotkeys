@@ -1,5 +1,5 @@
-import { savedHotkeys } from './savedHotkeys';
-import { pbnHotkeys } from './index';
+import { savedHotkeys } from './model';
+import { pbnHotkeys } from './app';
 export function createUI() {
   //Menu link
   const menuLinkDiv = document.createElement('div');

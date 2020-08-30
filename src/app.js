@@ -3,8 +3,8 @@
 // @author Thomas Herzog
 // ==/Bookmarklet==
 
-import { savedHotkeys } from './savedHotkeys';
-import { createUI, hotkeyCodeToText } from './ui';
+import { savedHotkeys } from './model';
+import { createUI, hotkeyCodeToText } from './view';
 import { createWebSocketProxy } from './webSocketProxy';
 
 export const pbnHotkeys = {

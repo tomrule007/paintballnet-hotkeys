@@ -1,4 +1,4 @@
-import { createUI } from '../ui';
+import { createUI } from '../view';
 import { screen } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 
