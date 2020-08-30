@@ -1,13 +1,19 @@
 import { savedHotkeys } from './model';
-import { pbnHotkeys } from './app';
-export function createUI() {
-  //Menu link
-  const menuLinkDiv = document.createElement('div');
-  menuLinkDiv.classList.add(
-    'TPBTOverlayScrollItem',
-    'TPBTOverlayScrollInfoItem'
-  );
-  menuLinkDiv.style.cssText = `position: fixed; 
+//import { pbnHotkeys } from './app';
+
+export default class View {
+  constructor(props) {}
+  bindOnKeydown(handler) {
+    document.addEventListener('keydown', handler);
+  }
+  createUI() {
+    //Menu link
+    const menuLinkDiv = document.createElement('div');
+    menuLinkDiv.classList.add(
+      'TPBTOverlayScrollItem',
+      'TPBTOverlayScrollInfoItem'
+    );
+    menuLinkDiv.style.cssText = `position: fixed; 
                      z-index: 1000;
                      top: 2px;
                      right: 2px;
@@ -15,84 +21,86 @@ export function createUI() {
                      text-decoration: underline;
                      cursor: pointer;
                      `;
-  const a = document.createElement('a');
-  a.appendChild(document.createTextNode('PBN-Hotkeys'));
-  a.title = `red = not connected
+    const a = document.createElement('a');
+    a.appendChild(document.createTextNode('PBN-Hotkeys'));
+    a.title = `red = not connected
 black = connected
 hotkeys by tomrule007`;
-  a.id = 'pbnHotkeysLink';
-  a.onclick = () => showMenu(true);
-  menuLinkDiv.append(a);
-  document.body.appendChild(menuLinkDiv);
-  console.log(menuLinkDiv);
-  //Hotkey Setup Menu
-  const menuDiv = document.createElement('div');
-  menuDiv.id = 'pbnHotkeysMenu';
-  menuDiv.classList.add(
-    'TW3Panel',
-    'TW3ContainerBorder',
-    'TW3ContainerBackground'
-  );
-  menuDiv.style.cssText =
-    'z-index: 8; right: 2px; top: 40px; position: fixed; display: none;';
+    a.id = 'pbnHotkeysLink';
+    a.onclick = () => showMenu(true);
+    menuLinkDiv.append(a);
+    document.body.appendChild(menuLinkDiv);
+    console.log(menuLinkDiv);
+    //Hotkey Setup Menu
+    const menuDiv = document.createElement('div');
+    menuDiv.id = 'pbnHotkeysMenu';
+    menuDiv.classList.add(
+      'TW3Panel',
+      'TW3ContainerBorder',
+      'TW3ContainerBackground'
+    );
+    menuDiv.style.cssText =
+      'z-index: 8; right: 2px; top: 40px; position: fixed; display: none;';
 
-  // menu label
-  const menuBarDiv = document.createElement('div');
-  menuBarDiv.style.cssText = 'display: flex; justify-content:	space-between;';
-  const menuLabelEl = document.createElement('span');
-  menuLabelEl.append(
-    document.createTextNode('Paintballnet-Hotkeys by tomrule007')
-  );
-  menuLabelEl.classList.add('tw3label');
+    // menu label
+    const menuBarDiv = document.createElement('div');
+    menuBarDiv.style.cssText = 'display: flex; justify-content:	space-between;';
+    const menuLabelEl = document.createElement('span');
+    menuLabelEl.append(
+      document.createTextNode('Paintballnet-Hotkeys by tomrule007')
+    );
+    menuLabelEl.classList.add('tw3label');
 
-  // menu content container
-  const menuContentEl = document.createElement('div');
-  menuContentEl.id = 'pbnHotkeyMenuDisplay';
-  menuContentEl.classList.add('TPBTListBox');
-  menuContentEl.style.cssText =
-    'margin: 5px 2px; font-family: Lucida Console; font-size: 10pt; padding: 2px;';
-  console.log(window.pbnHotkeyMenuDisplay);
-  // menu close button
-  const closeButtonEl = document.createElement('button');
-  closeButtonEl.append(document.createTextNode('X'));
-  closeButtonEl.classList.add(
-    'TW3Button',
-    'TW3ButtonBackground',
-    'TW3ButtonBorder'
-  );
-  closeButtonEl.style.cssText = 'margin: 2px; font-size: 8pt;';
-  closeButtonEl.onclick = () => showMenu(false);
+    // menu content container
+    const menuContentEl = document.createElement('div');
+    menuContentEl.id = 'pbnHotkeyMenuDisplay';
+    menuContentEl.classList.add('TPBTListBox');
+    menuContentEl.style.cssText =
+      'margin: 5px 2px; font-family: Lucida Console; font-size: 10pt; padding: 2px;';
+    console.log(window.pbnHotkeyMenuDisplay);
+    // menu close button
+    const closeButtonEl = document.createElement('button');
+    closeButtonEl.append(document.createTextNode('X'));
+    closeButtonEl.classList.add(
+      'TW3Button',
+      'TW3ButtonBackground',
+      'TW3ButtonBorder'
+    );
+    closeButtonEl.style.cssText = 'margin: 2px; font-size: 8pt;';
+    closeButtonEl.onclick = () => showMenu(false);
 
-  //save changes button
-  const saveButton = document.createElement('button');
-  saveButton.append(document.createTextNode('Save Changes'));
-  saveButton.classList.add(
-    'TW3Button',
-    'TW3ButtonBackground',
-    'TW3ButtonBorder'
-  );
-  saveButton.style.cssText = 'margin: 2px; font-size: 8pt;';
-  saveButton.onclick = saveChanges;
+    //save changes button
+    const saveButton = document.createElement('button');
+    saveButton.append(document.createTextNode('Save Changes'));
+    saveButton.classList.add(
+      'TW3Button',
+      'TW3ButtonBackground',
+      'TW3ButtonBorder'
+    );
+    saveButton.style.cssText = 'margin: 2px; font-size: 8pt;';
+    saveButton.onclick = saveChanges;
 
-  const saveButtonContainerEl = document.createElement('div');
-  saveButtonContainerEl.style.display = 'flex';
-  saveButtonContainerEl.style.justifyContent = 'center';
+    const saveButtonContainerEl = document.createElement('div');
+    saveButtonContainerEl.style.display = 'flex';
+    saveButtonContainerEl.style.justifyContent = 'center';
 
-  menuBarDiv.append(menuLabelEl, closeButtonEl);
-  saveButtonContainerEl.append(saveButton);
-  menuDiv.append(menuBarDiv, menuContentEl, saveButtonContainerEl);
+    menuBarDiv.append(menuLabelEl, closeButtonEl);
+    saveButtonContainerEl.append(saveButton);
+    menuDiv.append(menuBarDiv, menuContentEl, saveButtonContainerEl);
 
-  document.body.appendChild(menuDiv);
+    document.body.appendChild(menuDiv);
 
-  Object.entries(savedHotkeys).forEach(([hotkey, command]) => {
-    createHotkeyCard(hotkey, command);
-  });
-  createHotkeyCard('Click to set', '');
+    Object.entries(savedHotkeys).forEach(([hotkey, command]) => {
+      createHotkeyCard(hotkey, command);
+    });
+    createHotkeyCard('Click to set', '');
 
-  return {
-    setLinkEnabled,
-  };
+    return {
+      setLinkEnabled,
+    };
+  }
 }
+
 function getHotkeysFromMenu() {
   const menuContentDiv = document.getElementById('pbnHotkeysMenu')
     .childNodes[1];
@@ -253,7 +261,7 @@ function setHotkeyClickHandler(e) {
   window.setHotkeyActive = newParent;
 }
 
-export function hotkeyCodeToText(hotkey) {
+function hotkeyCodeToText(hotkey) {
   const [shiftKey, altKey, ctrlKey] = hotkey
     .slice(-3)
     .split('')

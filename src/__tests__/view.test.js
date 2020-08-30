@@ -1,4 +1,4 @@
-import { createUI } from '../view';
+import View from '../view';
 import { screen } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 
@@ -8,7 +8,8 @@ describe('CreateUI()', () => {
     document.body.innerHTML = '<div> </div>';
 
     // Run UI generating code
-    createUI();
+    const view = new View();
+    view.createUI();
   });
   it('Generates UI to matches snapshot', async () => {
     //make snapshot of modified dom

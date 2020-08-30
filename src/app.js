@@ -3,40 +3,18 @@
 // @author Thomas Herzog
 // ==/Bookmarklet==
 
-import { savedHotkeys } from './model';
-import { createUI, hotkeyCodeToText } from './view';
+import Controller from './controller';
+import View from './view';
+import Model from './model';
+
 import { createWebSocketProxy } from './webSocketProxy';
+const view = new View();
+const model = new Model();
+const controller = new Controller(view, model);
 
-export const pbnHotkeys = {
-  hotkeys: savedHotkeys,
-  createHotkeyListener() {
-    const handleKeydown = ({ key, shiftKey, altKey, ctrlKey }) => {
-      const hotkey = key + +shiftKey + +altKey + +ctrlKey;
-      const chatboxIsNotActive = !(
-        window.Component592 === document.activeElement
-      );
-
-      if (window.setHotkeyActive) {
-        window.hotkeySetContainer.childNodes[1].dataset.hotkeyCode = hotkey;
-        window.hotkeySetContainer.childNodes[1].innerText = hotkeyCodeToText(
-          hotkey
-        );
-
-        return;
-      }
-
-      if (chatboxIsNotActive && this.hotkeys[hotkey]) {
-        sendPortal(`{"id":"05","text":"${this.hotkeys[hotkey]}"}`);
-      }
-    };
-    document.addEventListener('keydown', handleKeydown);
-  },
-};
-
-const ui = createUI();
 createWebSocketProxy((...args) => {
   console.log(args);
   ui.setLinkEnabled();
 });
-pbnHotkeys.createHotkeyListener();
+
 console.log('ENDD');
