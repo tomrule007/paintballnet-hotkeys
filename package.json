@@ -4,9 +4,11 @@
   "description": "Bookmarklet that allows users to create hotkeys for paintballnet.net",
   "main": "app.js",
   "scripts": {
+    "start": "webpack-dev-server --config webpack.dev.js --open",
+    "build": "webpack --config webpack.prod.js",
     "bookmark": "bookmarklet -d ./dist/main.js ./build/index.html && date",
     "dev": "concurrently \"webpack --watch\" \"watch 'npm run bookmark' dist\" \"live-server build/index.html\"",
-    "build": "webpack && npm run bookmark",
+    "build2": "webpack && npm run bookmark",
     "test": "jest"
   },
   "keywords": [
@@ -29,11 +31,14 @@
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.1.0",
     "concurrently": "^5.3.0",
+    "html-webpack-plugin": "^4.4.1",
     "jest": "^26.4.2",
     "live-server": "^1.2.1",
     "terser-webpack-plugin": "^4.1.0",
     "watch": "^1.0.2",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.1.3"
   }
 }
