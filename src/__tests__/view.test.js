@@ -9,7 +9,7 @@ describe('CreateUI()', () => {
 
     // Run UI generating code
     const view = new View();
-    view.createUI();
+    // view.createUI();
   });
   it('Generates UI to matches snapshot', async () => {
     //make snapshot of modified dom

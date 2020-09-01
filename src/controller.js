@@ -3,11 +3,17 @@ export default class Controller {
     this.view = view;
     this.model = model;
 
-    // initialize ui
-    this.view.createUI();
-
     // bind event listeners
     document.addEventListener('keydown', this.handleKeydown);
+  }
+  render(viewCommand, parameters) {
+    switch (viewCommand) {
+      case value:
+        break;
+
+      default:
+        break;
+    }
   }
   handleKeydown = ({ key, shiftKey, altKey, ctrlKey }) => {
     console.log(this);

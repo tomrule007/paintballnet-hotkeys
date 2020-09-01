@@ -12,9 +12,4 @@ const view = new View();
 const model = new Model();
 const controller = new Controller(view, model);
 
-createWebSocketProxy((...args) => {
-  console.log(args);
-  ui.setLinkEnabled();
-});
-
-console.log('ENDD');
+console.log('PBN-Hotkeys by tomrule007');
