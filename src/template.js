@@ -285,7 +285,6 @@ function createHotkeyEditBox() {
   </div>`;
 }
 function createUI() {
-  console.log('CALLLEED CREATEUI');
   //Menu link
   const menuLinkDiv = document.createElement('div');
   menuLinkDiv.classList.add(
@@ -306,10 +305,8 @@ function createUI() {
 black = connected
 hotkeys by tomrule007`;
   a.id = 'pbnHotkeysLink';
-  a.onclick = () => showMenu(true);
   menuLinkDiv.append(a);
   document.body.appendChild(menuLinkDiv);
-  console.log(menuLinkDiv);
   //Hotkey Setup Menu
   const menuDiv = document.createElement('div');
   menuDiv.id = 'pbnHotkeysMenu';
@@ -336,7 +333,6 @@ hotkeys by tomrule007`;
   menuContentEl.classList.add('TPBTListBox');
   menuContentEl.style.cssText =
     'margin: 5px 2px; font-family: Lucida Console; font-size: 10pt; padding: 2px;';
-  console.log(window.pbnHotkeyMenuDisplay);
   // menu close button
   const closeButtonEl = document.createElement('button');
   closeButtonEl.append(document.createTextNode('X'));
@@ -346,8 +342,7 @@ hotkeys by tomrule007`;
     'TW3ButtonBorder'
   );
   closeButtonEl.style.cssText = 'margin: 2px; font-size: 8pt;';
-  closeButtonEl.onclick = () => showMenu(false);
-
+  closeButtonEl.id = 'pbnHotkeysMenuCloseButton';
   //save changes button
   const saveButton = document.createElement('button');
   saveButton.append(document.createTextNode('Save Changes'));
@@ -387,7 +382,6 @@ function getHotkeysFromMenu() {
       const hotkeyCard = hotkeyCardContainer.childNodes[0];
       const hotkey = hotkeyCard.childNodes[0].childNodes[0].dataset.hotkeyCode;
       const command = hotkeyCard.childNodes[1].innerText;
-      console.log({ hotkey, command });
       return [hotkey, command];
     })
   );
@@ -445,13 +439,9 @@ function createHotkeyCard(hotkey, command) {
 
   hotkeyCardContainer.append(hotkeyCard);
   hotkeyCard.append(hotkeyDivEl, hotkeyCommandEl);
-  console.log(window.pbnHotkeyMenuDisplay);
   window.pbnHotkeyMenuDisplay.appendChild(hotkeyCardContainer);
 }
 
-function showMenu(setVisible) {
-  pbnHotkeysMenu.style.display = setVisible ? 'block' : 'none';
-}
 function setLinkEnabled() {
   pbnHotkeysLink.style.color = 'black';
 }
@@ -487,9 +477,7 @@ function deleteHotkey(e) {
 }
 
 function setHotkeyClickHandler(e) {
-  console.log('GOO');
   if (!window.hotkeySetContainer) {
-    console.log('create new div');
     // create new div
     const hotkeySetContainer = document.createElement('div');
     window.hotkeySetContainer = hotkeySetContainer;

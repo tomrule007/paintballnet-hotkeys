@@ -1,11 +1,19 @@
 import { savedHotkeys } from './model';
 import { createWebSocketProxy } from './webSocketProxy';
 import template from './template';
+/**
+ * View handle all DOM interactions
+ * It has two simple entry points:
+ *
+ *   - bind(eventName, handler)
+ *     Takes a pbn-hotkey application event and registers the handler
+ *   - render(command, parameterObject)
+ *     Renders the given command with the options
+ */
 export default class View {
   constructor(props) {
     // Setup webSocketProxy spy
     createWebSocketProxy((...args) => {
-      console.log('WEB SOCKET: ', args);
       ui.setLinkEnabled();
     });
 
@@ -14,17 +22,33 @@ export default class View {
     this.createUI();
 
     // Save DOM Refs
-    const injectionRoot = document.body;
-    const menuOpenEl = document.querySelector('#pbnHotkeysLink');
-    const menuHotkeyContainerEl = document.querySelector(
-      '#pbnHotkeyMenuDisplay'
+    this.$injectionRoot = document.body;
+    this.$menuLink = document.querySelector('#pbnHotkeysLink');
+    this.$menu = document.querySelector('#pbnHotkeysMenu');
+    this.$menuCloseButton = document.querySelector(
+      '#pbnHotkeysMenuCloseButton'
     );
-    console.log({ injectionRoot, menuOpenEl, menuHotkeyContainerEl });
+    this.$hotkeys = document.querySelector('#pbnHotkeyMenuDisplay');
+
+    // Temporary event wiring for testing.
+    this.$menuLink.addEventListener('click', () => this._showMenu(true));
+    this.$menuCloseButton.addEventListener('click', () =>
+      this._showMenu(false)
+    );
+  }
+
+  _showMenu(setVisible) {
+    this.$menu.style.display = setVisible ? 'block' : 'none';
   }
   bindOnKeydown(handler) {
     document.addEventListener('keydown', handler);
   }
-  render(viewCommand, parameter) {
+  /**
+   * Renders the given command with the options
+   * @param {String} viewCommand
+   * @param {Object} parameterObject
+   */
+  render(viewCommand, parameterObject) {
     switch (viewCommand) {
       case 'initilizeMenu':
         break;
@@ -34,5 +58,14 @@ export default class View {
         break;
     }
   }
-  bind(event, handler) {}
+
+  /**
+   * Registers viewEvent handlers.
+   * @param {String} eventName
+   * @param {function} handler
+   */
+  bind(eventName, handler) {
+    if (eventName === 'showMenu')
+      $menuLink.addEventListener('click', () => handler());
+  }
 }
