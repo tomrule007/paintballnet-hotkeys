@@ -13,8 +13,8 @@ import template from './template';
 export default class View {
   constructor(props) {
     // Setup webSocketProxy spy
-    createWebSocketProxy((...args) => {
-      ui.setLinkEnabled();
+    createWebSocketProxy(() => {
+      this._setLinkEnabled();
     });
 
     // Create and Inject UI
@@ -25,6 +25,7 @@ export default class View {
     this.$injectionRoot = document.body;
     this.$menuLink = document.querySelector('#pbnHotkeysLink');
     this.$menu = document.querySelector('#pbnHotkeysMenu');
+    this.$menuSaveButton = document.querySelector('#pbnHotkeysMenuSaveButton');
     this.$menuCloseButton = document.querySelector(
       '#pbnHotkeysMenuCloseButton'
     );
@@ -37,6 +38,27 @@ export default class View {
     );
   }
 
+  _getHotkeysFromMenu() {
+    const hotkeyCards = Array.from(this.$hotkeys.childNodes);
+    const newHotkeysAndCommands = Object.fromEntries(
+      hotkeyCards.map((hotkeyCard) => {
+        const hotkey =
+          hotkeyCard.childNodes[0].childNodes[0].dataset.hotkeyCode;
+        const command = hotkeyCard.childNodes[1].value;
+
+        return [hotkey, command];
+      })
+    );
+
+    return newHotkeysAndCommands;
+  }
+  _setLinkEnabled() {
+    pbnHotkeysLink.style.color = 'black';
+  }
+  _addHotkey({ hotkey, command }) {
+    const hotkeyCard = template.createHotkeyCard(hotkey, command);
+    this.$hotkeys.append(hotkeyCard);
+  }
   _showMenu(setVisible) {
     this.$menu.style.display = setVisible ? 'block' : 'none';
   }
@@ -45,12 +67,13 @@ export default class View {
   }
   /**
    * Renders the given command with the options
-   * @param {String} viewCommand
+   * @param {'addHotkey'} viewCommand
    * @param {Object} parameterObject
    */
   render(viewCommand, parameterObject) {
     switch (viewCommand) {
-      case 'initilizeMenu':
+      case 'addHotkey':
+        this._addHotkey(parameterObject);
         break;
 
       default:
@@ -61,11 +84,25 @@ export default class View {
 
   /**
    * Registers viewEvent handlers.
-   * @param {String} eventName
+   * @param {'onSaveChanges'|'onKeydown'} eventName
    * @param {function} handler
    */
-  bind(eventName, handler) {
-    if (eventName === 'showMenu')
-      $menuLink.addEventListener('click', () => handler());
+  bindEvent(eventName, handler) {
+    console.log(eventName, handler);
+    switch (eventName) {
+      case 'onSaveChanges':
+        this.$menuSaveButton.addEventListener('click', () => {
+          const hotkeyData = this._getHotkeysFromMenu();
+          console.log('hotkeydaya', hotkeyData);
+          handler(hotkeyData);
+        });
+        break;
+      case 'onKeydown':
+        document.addEventListener('keydown', handler);
+        break;
+      default:
+        throw Error(`Invalid eventName: ${eventName} `);
+        break;
+    }
   }
 }

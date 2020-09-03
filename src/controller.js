@@ -4,19 +4,19 @@ export default class Controller {
     this.model = model;
 
     // bind event listeners
-    document.addEventListener('keydown', this.handleKeydown);
-  }
-  render(viewCommand, parameters) {
-    switch (viewCommand) {
-      case value:
-        break;
+    view.bindEvent('onKeydown', (e) => this.handleKeydown(e));
+    view.bindEvent('onSaveChanges', (hotkeyData) => {
+      this.model.setHotkeys(hotkeyData);
+    });
 
-      default:
-        break;
-    }
+    // Populate menu with saved hotkeys.
+    Object.entries(model.hotkeys).forEach(([hotkey, command]) => {
+      view.render('addHotkey', { hotkey, command });
+      console.log('render', hotkey, command);
+    });
   }
+
   handleKeydown = ({ key, shiftKey, altKey, ctrlKey }) => {
-    console.log(this);
     const hotkey = key + +shiftKey + +altKey + +ctrlKey;
     console.log(hotkey);
     const chatboxIsNotActive = !(
