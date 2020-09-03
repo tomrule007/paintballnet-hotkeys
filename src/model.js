@@ -15,4 +15,8 @@ export default class Model {
   constructor() {
     this.hotkeys = savedHotkeys;
   }
+  setHotkeys(hotkeyData) {
+    this.hotkeys = hotkeyData;
+    window.localStorage.setItem('pbn-hotkeys', JSON.stringify(hotkeyData));
+  }
 }
