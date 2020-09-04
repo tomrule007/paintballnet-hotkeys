@@ -12,23 +12,17 @@ export default class Controller {
     // Populate menu with saved hotkeys.
     Object.entries(model.hotkeys).forEach(([hotkey, command]) => {
       view.render('addHotkey', { hotkey, command });
-      console.log('render', hotkey, command);
     });
   }
 
   handleKeydown = ({ key, shiftKey, altKey, ctrlKey }) => {
     const hotkey = key + +shiftKey + +altKey + +ctrlKey;
-    console.log(hotkey);
     const chatboxIsNotActive = !(
       window.Component592 === document.activeElement
     );
 
-    if (window.setHotkeyActive) {
-      window.hotkeySetContainer.childNodes[1].dataset.hotkeyCode = hotkey;
-      window.hotkeySetContainer.childNodes[1].innerText = hotkeyCodeToText(
-        hotkey
-      );
-
+    if (this.view.$activeEditHotkeyCard) {
+      this.view._updateEditHotkeyCard(hotkey);
       return;
     }
 

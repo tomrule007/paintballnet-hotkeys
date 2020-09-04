@@ -82,7 +82,7 @@ hotkeys by tomrule007`;
   document.body.appendChild(menuDiv);
 }
 
-function createHotkeyCard(hotkey, command) {
+function createHotkeyCard(hotkey, hotkeyText, command) {
   // TODO: convert to template literal
   const hotkeyCard = document.createElement('div');
   hotkeyCard.classList.add('pbnHotkeyCard');
@@ -93,7 +93,7 @@ function createHotkeyCard(hotkey, command) {
 
   const hotkeyEl = document.createElement('a');
   hotkeyEl.dataset.hotkeyCode = hotkey;
-  hotkeyEl.append(document.createTextNode(hotkeyCodeToText(hotkey)));
+  hotkeyEl.append(document.createTextNode(hotkeyText));
   hotkeyDivEl.append(hotkeyEl);
   const hotkeyCommandInput = document.createElement('input');
   hotkeyCommandInput.classList.add(
@@ -112,7 +112,7 @@ function createHotkeyCard(hotkey, command) {
 }
 
 function createHotkeyEditCard() {
-  // create new div
+  // TODO: convert to template literal
   const hotkeySetContainer = document.createElement('div');
   hotkeySetContainer.style.cssText =
     'display: flex; text-align: center; font-weight: bold; background: white;';
@@ -147,21 +147,5 @@ function createHotkeyEditCard() {
   return [hotkeySetContainer, setHotkeyButton, deleteHotkeyButton];
 }
 
-function hotkeyCodeToText(hotkey) {
-  const [shiftKey, altKey, ctrlKey] = hotkey
-    .slice(-3)
-    .split('')
-    .map((keyString) => Boolean(+keyString));
-
-  const key = hotkey.slice(0, -3);
-  // TODO: add OS specific names
-  // Example: Alt == Option on macs
-  return (
-    (shiftKey & (key !== 'Shift') ? 'Shift+' : '') +
-    (altKey & (key !== 'Alt') ? 'Alt+' : '') +
-    (ctrlKey & (key !== 'Control') ? 'Ctrl+' : '') +
-    key
-  );
-}
 const template = { createUI, createHotkeyCard, createHotkeyEditCard };
 export default template;

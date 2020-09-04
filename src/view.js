@@ -12,7 +12,6 @@ import template from './template';
  */
 export default class View {
   constructor(props) {
-    console.log('create view');
     // Setup webSocketProxy spy
     createWebSocketProxy(() => {
       this._setLinkEnabled();
@@ -30,7 +29,7 @@ export default class View {
     ] = template.createHotkeyEditCard();
 
     this.$setHotkeyButton.addEventListener('click', () =>
-      this._setUpdatedHotkey(this.$activeEditHotkeyCard)
+      this._onClickSetHotkey(this.$activeEditHotkeyCard)
     );
     this.$deleteHotkeyButton.addEventListener('click', () =>
       this._deleteHotkey(this.$activeEditHotkeyCard)
@@ -53,26 +52,55 @@ export default class View {
       this._showMenu(false)
     );
   }
-  _setUpdatedHotkey(hotkeyCard) {
-    console.log('_setUpdatedHotkey', hotkeyCard);
-    const newHotkey = window.hotkeySetContainer.childNodes[1].innerText;
-    const newHotkeyCode =
-      window.hotkeySetContainer.childNodes[1].dataset.hotkeyCode;
-    if (newHotkey) {
-      window.setHotkeyActive.childNodes[0].childNodes[0].innerText = newHotkey;
-      window.setHotkeyActive.childNodes[0].childNodes[0].dataset.hotkeyCode = newHotkeyCode;
-      window.hotkeySetContainer.remove();
-      window.setHotkeyActive.style.border = '';
-      window.setHotkeyActive.style.borderBottom = '';
-      window.setHotkeyActive = undefined;
-    }
+
+  // EditCard functions: Read | Update
+
+  _readEditHotkeyCardData() {
+    const $editCardHotkeyDisplay = this.$hotkeyEditCard.childNodes[1];
+
+    const hotkey = $editCardHotkeyDisplay.dataset.hotkeyCode;
+    const hotkeyText = $editCardHotkeyDisplay.innerText;
+    return { hotkey, hotkeyText };
   }
-  _updateHotkeyCardData(hotkeyCard) {}
+  _updateEditHotkeyCard(hotkey) {
+    const $editCardHotkeyDisplay = this.$hotkeyEditCard.childNodes[1];
+
+    $editCardHotkeyDisplay.dataset.hotkeyCode = hotkey;
+    $editCardHotkeyDisplay.innerText = this._hotkeyCodeToText(hotkey);
+  }
+
+  // hotkeyCard functions: CREATE | READ | UPDATE | DELETE
+  _createHotkeyCard({ hotkey, command }) {
+    const [hotkeyCard, hotkeyEl] = template.createHotkeyCard(
+      hotkey,
+      this._hotkeyCodeToText(hotkey),
+      command
+    );
+    hotkeyEl.addEventListener('click', () =>
+      this._onClickHotkeyHandler(hotkeyCard)
+    );
+
+    this.$hotkeys.append(hotkeyCard);
+  }
+
   _readHotkeyCardData(hotkeyCard) {
     const hotkey = hotkeyCard.childNodes[0].childNodes[0].innerText;
     const command = hotkeyCard.childNodes[1].value;
     return { hotkey, command };
   }
+
+  _updateHotkeyCardData(hotkeyCard, { hotkey, command }) {
+    if (hotkey) {
+      hotkeyCard.childNodes[0].childNodes[0].dataset.hotkeyCode = hotkey;
+      hotkeyCard.childNodes[0].childNodes[0].innerText = this._hotkeyCodeToText(
+        hotkey
+      );
+    }
+    if (command) {
+      hotkeyCard.childNodes[1].value = command;
+    }
+  }
+
   _deleteHotkey(hotkeyCard) {
     const { hotkey, command } = this._readHotkeyCardData(hotkeyCard);
 
@@ -81,7 +109,33 @@ export default class View {
       hotkeyCard.remove();
     }
   }
+  // Menu Functions: show/hide | enableLink
+  _showMenu(setVisible) {
+    this.$menu.style.display = setVisible ? 'block' : 'none';
+  }
 
+  _setLinkEnabled() {
+    pbnHotkeysLink.style.color = 'black';
+  }
+
+  // Other Functions
+  _hotkeyCodeToText(hotkey) {
+    if (hotkey === '') return '';
+    const [shiftKey, altKey, ctrlKey] = hotkey
+      .slice(-3)
+      .split('')
+      .map((keyString) => Boolean(+keyString));
+
+    const key = hotkey.slice(0, -3);
+    // TODO: add OS specific names
+    // Example: Alt == Option on macs
+    return (
+      (shiftKey & (key !== 'Shift') ? 'Shift+' : '') +
+      (altKey & (key !== 'Alt') ? 'Alt+' : '') +
+      (ctrlKey & (key !== 'Control') ? 'Ctrl+' : '') +
+      key
+    );
+  }
   _getHotkeysFromMenu() {
     const hotkeyCards = Array.from(this.$hotkeys.childNodes);
     const newHotkeysAndCommands = Object.fromEntries(
@@ -96,8 +150,16 @@ export default class View {
 
     return newHotkeysAndCommands;
   }
-  _setLinkEnabled() {
-    pbnHotkeysLink.style.color = 'black';
+
+  // onClick Handlers
+  _onClickSetHotkey(hotkeyCard) {
+    // TODO: add validation to insure no duplicate hotkeys exist.
+    this._updateHotkeyCardData(hotkeyCard, this._readEditHotkeyCardData());
+
+    // Clear and remove edit card
+    this._updateEditHotkeyCard('');
+    this.$activeEditHotkeyCard.remove();
+    this.$activeEditHotkeyCard = null;
   }
   _onClickHotkeyHandler(hotkeyCard) {
     // Reset style on old activeEditHotkeyCard
@@ -112,17 +174,7 @@ export default class View {
     // Update current active hotkey card
     this.$activeEditHotkeyCard = hotkeyCard;
   }
-  _addHotkey({ hotkey, command }) {
-    const [hotkeyCard, hotkeyEl] = template.createHotkeyCard(hotkey, command);
-    hotkeyEl.addEventListener('click', () =>
-      this._onClickHotkeyHandler(hotkeyCard)
-    );
 
-    this.$hotkeys.append(hotkeyCard);
-  }
-  _showMenu(setVisible) {
-    this.$menu.style.display = setVisible ? 'block' : 'none';
-  }
   bindOnKeydown(handler) {
     document.addEventListener('keydown', handler);
   }
@@ -134,7 +186,7 @@ export default class View {
   render(viewCommand, parameterObject) {
     switch (viewCommand) {
       case 'addHotkey':
-        this._addHotkey(parameterObject);
+        this._createHotkeyCard(parameterObject);
         break;
 
       default:
@@ -149,12 +201,10 @@ export default class View {
    * @param {function} handler
    */
   bindEvent(eventName, handler) {
-    console.log(eventName, handler);
     switch (eventName) {
       case 'onSaveChanges':
         this.$menuSaveButton.addEventListener('click', () => {
           const hotkeyData = this._getHotkeysFromMenu();
-          console.log('hotkeydaya', hotkeyData);
           handler(hotkeyData);
         });
         break;
