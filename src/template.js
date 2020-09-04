@@ -83,7 +83,7 @@ hotkeys by tomrule007`;
 }
 
 function createHotkeyCard(hotkey, command) {
-  // TODO: remove event handlers and convert to template literal
+  // TODO: convert to template literal
   const hotkeyCard = document.createElement('div');
   hotkeyCard.classList.add('pbnHotkeyCard');
   hotkeyCard.style.position = 'relative';
@@ -94,7 +94,6 @@ function createHotkeyCard(hotkey, command) {
   const hotkeyEl = document.createElement('a');
   hotkeyEl.dataset.hotkeyCode = hotkey;
   hotkeyEl.append(document.createTextNode(hotkeyCodeToText(hotkey)));
-  hotkeyEl.onclick = setHotkeyClickHandler;
   hotkeyDivEl.append(hotkeyEl);
   const hotkeyCommandInput = document.createElement('input');
   hotkeyCommandInput.classList.add(
@@ -109,85 +108,43 @@ function createHotkeyCard(hotkey, command) {
   hotkeyCommandInput.onkeydown = (e) => e.stopPropagation();
 
   hotkeyCard.append(hotkeyDivEl, hotkeyCommandInput);
-  return hotkeyCard;
+  return [hotkeyCard, hotkeyEl];
 }
 
-function saveUpdatedHotkey(e) {
-  const newHotkey = window.hotkeySetContainer.childNodes[1].innerText;
-  const newHotkeyCode =
-    window.hotkeySetContainer.childNodes[1].dataset.hotkeyCode;
-  if (newHotkey) {
-    window.setHotkeyActive.childNodes[0].childNodes[0].innerText = newHotkey;
-    window.setHotkeyActive.childNodes[0].childNodes[0].dataset.hotkeyCode = newHotkeyCode;
-    window.hotkeySetContainer.remove();
-    window.setHotkeyActive.style.border = '';
-    window.setHotkeyActive.style.borderBottom = '';
-    window.setHotkeyActive = undefined;
-  }
-}
-
-function deleteHotkey(e) {
-  const hotkeyCard = this.parentNode.parentNode;
-  const hotkey = hotkeyCard.childNodes[0].childNodes[0].innerText;
-  const command = hotkeyCard.childNodes[1].value;
-  const confirmDelete = confirm(
-    `Confirm deletion of selected hotkey: 
-    ${hotkey}:   ${command}`
+function createHotkeyEditCard() {
+  // create new div
+  const hotkeySetContainer = document.createElement('div');
+  hotkeySetContainer.style.cssText =
+    'display: flex; text-align: center; font-weight: bold; background: white;';
+  const hotkeySetText = document.createTextNode('New hotkey:');
+  const hotkeyDiv = document.createElement('div');
+  hotkeyDiv.style.flex = '1 1';
+  const setHotkeyButton = document.createElement('button');
+  setHotkeyButton.append(document.createTextNode('Set'));
+  setHotkeyButton.classList.add(
+    'TW3Button',
+    'TW3ButtonBackground',
+    'TW3ButtonBorder'
   );
-  if (confirmDelete) {
-    window.setHotkeyActive = undefined;
-    hotkeyCard.remove();
-  }
-}
+  setHotkeyButton.style.cssText = 'font-size: 8pt;';
 
-function setHotkeyClickHandler(e) {
-  if (!window.hotkeySetContainer) {
-    // create new div
-    const hotkeySetContainer = document.createElement('div');
-    window.hotkeySetContainer = hotkeySetContainer;
-    hotkeySetContainer.style.cssText =
-      'display: flex; text-align: center; font-weight: bold; background: white;';
-    const hotkeySetText = document.createTextNode('New hotkey:');
-    const hotkeyDiv = document.createElement('div');
-    hotkeyDiv.style.flex = '1 1';
-    const saveHotkeyButton = document.createElement('button');
-    saveHotkeyButton.append(document.createTextNode('Save'));
-    saveHotkeyButton.classList.add(
-      'TW3Button',
-      'TW3ButtonBackground',
-      'TW3ButtonBorder '
-    );
-    saveHotkeyButton.style.cssText = 'font-size: 8pt;';
-    saveHotkeyButton.onclick = saveUpdatedHotkey;
+  const deleteHotkeyButton = document.createElement('button');
+  deleteHotkeyButton.append(document.createTextNode('Delete'));
+  deleteHotkeyButton.classList.add(
+    'TW3Button',
+    'TW3ButtonBackground',
+    'TW3ButtonBorder'
+  );
+  deleteHotkeyButton.style.cssText = 'font-size: 8pt;';
 
-    const deleteHotkeyButton = document.createElement('button');
-    deleteHotkeyButton.append(document.createTextNode('Delete'));
-    deleteHotkeyButton.classList.add(
-      'TW3Button',
-      'TW3ButtonBackground',
-      'TW3ButtonBorder'
-    );
-    deleteHotkeyButton.style.cssText = 'font-size: 8pt;';
-    deleteHotkeyButton.onclick = deleteHotkey;
+  hotkeySetContainer.append(
+    hotkeySetText,
+    hotkeyDiv,
+    setHotkeyButton,
+    deleteHotkeyButton
+  );
 
-    hotkeySetContainer.append(
-      hotkeySetText,
-      hotkeyDiv,
-      saveHotkeyButton,
-      deleteHotkeyButton
-    );
-  }
-  const newParent = this.parentNode.parentNode;
-
-  //  reuse div
-  const oldParent = window.hotkeySetContainer.parentNode;
-  if (oldParent) {
-    oldParent.style.border = '';
-  }
-
-  newParent.append(window.hotkeySetContainer);
-  newParent.style.border = '1px solid black';
-  window.setHotkeyActive = newParent;
+  return [hotkeySetContainer, setHotkeyButton, deleteHotkeyButton];
 }
 
 function hotkeyCodeToText(hotkey) {
@@ -206,5 +163,5 @@ function hotkeyCodeToText(hotkey) {
     key
   );
 }
-const template = { createUI, createHotkeyCard };
+const template = { createUI, createHotkeyCard, createHotkeyEditCard };
 export default template;
