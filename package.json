@@ -1,6 +1,6 @@
 {
   "name": "paintballnet-hotkeys",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Bookmarklet that allows users to create hotkeys for paintballnet.net",
   "main": "app.js",
   "scripts": {
