@@ -48,9 +48,10 @@ export default class View {
 
     // Temporary event wiring for testing.
     this.$menuLink.addEventListener('click', () => this._showMenu(true));
-    this.$menuCloseButton.addEventListener('click', () =>
-      this._showMenu(false)
-    );
+    this.$menuCloseButton.addEventListener('click', () => {
+      this._showMenu(false);
+      this._clearAndRemoveEditHotkeyCard();
+    });
   }
 
   // EditCard functions: Read | Update
@@ -70,10 +71,11 @@ export default class View {
   }
 
   // hotkeyCard functions: CREATE | READ | UPDATE | DELETE
-  _createHotkeyCard({ hotkey, command }) {
+  _createHotkeyCard({ hotkey = '', command = '' } = {}) {
+    const hotkeyText = hotkey ? this._hotkeyCodeToText(hotkey) : 'Hotkey';
     const [hotkeyCard, hotkeyEl] = template.createHotkeyCard(
       hotkey,
-      this._hotkeyCodeToText(hotkey),
+      hotkeyText,
       command
     );
     hotkeyEl.addEventListener('click', () =>
@@ -91,6 +93,12 @@ export default class View {
 
   _updateHotkeyCardData(hotkeyCard, { hotkey, command }) {
     if (hotkey) {
+      // TODO: remove create new card side effect
+      // (current solution to insure new blank card exists)
+      if (hotkeyCard.childNodes[0].childNodes[0].innerText === 'Hotkey') {
+        this._createHotkeyCard();
+      }
+
       hotkeyCard.childNodes[0].childNodes[0].dataset.hotkeyCode = hotkey;
       hotkeyCard.childNodes[0].childNodes[0].innerText = this._hotkeyCodeToText(
         hotkey
@@ -104,6 +112,10 @@ export default class View {
   _deleteHotkey(hotkeyCard) {
     const { hotkey, command } = this._readHotkeyCardData(hotkeyCard);
 
+    if (hotkey === 'Hotkey') {
+      alert('You can not delete the blank hotkey card');
+      return;
+    }
     if (confirm(`DELETE: ${hotkey}: ${command}`)) {
       this.$activeEditHotkeyCard = null;
       hotkeyCard.remove();
@@ -136,6 +148,13 @@ export default class View {
       key
     );
   }
+  _clearAndRemoveEditHotkeyCard() {
+    // Clear and remove edit card
+    this._updateEditHotkeyCard('');
+    this.$hotkeyEditCard.remove();
+    this.$activeEditHotkeyCard.style.border = '';
+    this.$activeEditHotkeyCard = null;
+  }
   _getHotkeysFromMenu() {
     const hotkeyCards = Array.from(this.$hotkeys.childNodes);
     const newHotkeysAndCommands = Object.fromEntries(
@@ -154,12 +173,16 @@ export default class View {
   // onClick Handlers
   _onClickSetHotkey(hotkeyCard) {
     // TODO: add validation to insure no duplicate hotkeys exist.
-    this._updateHotkeyCardData(hotkeyCard, this._readEditHotkeyCardData());
+    const { hotkey, hotkeyText } = this._readEditHotkeyCardData();
+    const currentHotkeys = this._getHotkeysFromMenu();
 
-    // Clear and remove edit card
-    this._updateEditHotkeyCard('');
-    this.$activeEditHotkeyCard.remove();
-    this.$activeEditHotkeyCard = null;
+    if (currentHotkeys[hotkey] != undefined) {
+      alert('That hotkey is already assigned');
+      return;
+    }
+    this._updateHotkeyCardData(hotkeyCard, { hotkey, hotkeyText });
+
+    this._clearAndRemoveEditHotkeyCard();
   }
   _onClickHotkeyHandler(hotkeyCard) {
     // Reset style on old activeEditHotkeyCard

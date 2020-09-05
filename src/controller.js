@@ -13,6 +13,8 @@ export default class Controller {
     Object.entries(model.hotkeys).forEach(([hotkey, command]) => {
       view.render('addHotkey', { hotkey, command });
     });
+    // Add one blank hotkeyCard
+    view.render('addHotkey');
   }
 
   handleKeydown = ({ key, shiftKey, altKey, ctrlKey }) => {
