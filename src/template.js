@@ -102,7 +102,7 @@ function createHotkeyCard(hotkey, hotkeyText, command) {
     'TW3EditBackground'
   );
   hotkeyCommandInput.value = command;
-  hotkeyCommandInput.style.width = '200px';
+  hotkeyCommandInput.style.width = '350px';
   hotkeyCommandInput.type = 'text';
   hotkeyCommandInput.setAttribute('placeholder', 'type commands here');
   hotkeyCommandInput.onkeydown = (e) => e.stopPropagation();
@@ -136,6 +136,7 @@ function createHotkeyEditCard() {
     'TW3ButtonBorder'
   );
   deleteHotkeyButton.style.cssText = 'font-size: 8pt;';
+  deleteHotkeyButton.style.margin = '0 2px';
 
   hotkeySetContainer.append(
     hotkeySetText,
