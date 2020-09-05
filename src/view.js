@@ -1,279 +1,242 @@
 import { savedHotkeys } from './model';
-//import { pbnHotkeys } from './app';
-
+import { createWebSocketProxy } from './webSocketProxy';
+import template from './template';
+/**
+ * View handle all DOM interactions
+ * It has two simple entry points:
+ *
+ *   - bind(eventName, handler)
+ *     Takes a pbn-hotkey application event and registers the handler
+ *   - render(command, parameterObject)
+ *     Renders the given command with the options
+ */
 export default class View {
-  constructor(props) {}
+  constructor(props) {
+    // Setup webSocketProxy spy
+    createWebSocketProxy(() => {
+      this._setLinkEnabled();
+    });
+
+    // Create and Inject UI
+    this.createUI = template.createUI;
+    this.createUI();
+
+    // Create hotkey edit card and wire event listeners
+    [
+      this.$hotkeyEditCard,
+      this.$setHotkeyButton,
+      this.$deleteHotkeyButton,
+    ] = template.createHotkeyEditCard();
+
+    this.$setHotkeyButton.addEventListener('click', () =>
+      this._onClickSetHotkey(this.$activeEditHotkeyCard)
+    );
+    this.$deleteHotkeyButton.addEventListener('click', () =>
+      this._deleteHotkey(this.$activeEditHotkeyCard)
+    );
+
+    // Save DOM Refs
+    this.$activeEditHotkeyCard = null;
+    this.$injectionRoot = document.body;
+    this.$menuLink = document.querySelector('#pbnHotkeysLink');
+    this.$menu = document.querySelector('#pbnHotkeysMenu');
+    this.$menuSaveButton = document.querySelector('#pbnHotkeysMenuSaveButton');
+    this.$menuCloseButton = document.querySelector(
+      '#pbnHotkeysMenuCloseButton'
+    );
+    this.$hotkeys = document.querySelector('#pbnHotkeyMenuDisplay');
+
+    // Temporary event wiring for testing.
+    this.$menuLink.addEventListener('click', () => this._showMenu(true));
+    this.$menuCloseButton.addEventListener('click', () => {
+      this._showMenu(false);
+      this._clearAndRemoveEditHotkeyCard();
+    });
+  }
+
+  // EditCard functions: Read | Update
+
+  _readEditHotkeyCardData() {
+    const $editCardHotkeyDisplay = this.$hotkeyEditCard.childNodes[1];
+
+    const hotkey = $editCardHotkeyDisplay.dataset.hotkeyCode;
+    const hotkeyText = $editCardHotkeyDisplay.innerText;
+    return { hotkey, hotkeyText };
+  }
+  _updateEditHotkeyCard(hotkey) {
+    const $editCardHotkeyDisplay = this.$hotkeyEditCard.childNodes[1];
+
+    $editCardHotkeyDisplay.dataset.hotkeyCode = hotkey;
+    $editCardHotkeyDisplay.innerText = this._hotkeyCodeToText(hotkey);
+  }
+
+  // hotkeyCard functions: CREATE | READ | UPDATE | DELETE
+  _createHotkeyCard({ hotkey = '', command = '' } = {}) {
+    const hotkeyText = hotkey ? this._hotkeyCodeToText(hotkey) : 'Hotkey';
+    const [hotkeyCard, hotkeyEl] = template.createHotkeyCard(
+      hotkey,
+      hotkeyText,
+      command
+    );
+    hotkeyEl.addEventListener('click', () =>
+      this._onClickHotkeyHandler(hotkeyCard)
+    );
+
+    this.$hotkeys.append(hotkeyCard);
+  }
+
+  _readHotkeyCardData(hotkeyCard) {
+    const hotkey = hotkeyCard.childNodes[0].childNodes[0].innerText;
+    const command = hotkeyCard.childNodes[1].value;
+    return { hotkey, command };
+  }
+
+  _updateHotkeyCardData(hotkeyCard, { hotkey, command }) {
+    if (hotkey) {
+      // TODO: remove create new card side effect
+      // (current solution to insure new blank card exists)
+      if (hotkeyCard.childNodes[0].childNodes[0].innerText === 'Hotkey') {
+        this._createHotkeyCard();
+      }
+
+      hotkeyCard.childNodes[0].childNodes[0].dataset.hotkeyCode = hotkey;
+      hotkeyCard.childNodes[0].childNodes[0].innerText = this._hotkeyCodeToText(
+        hotkey
+      );
+    }
+    if (command) {
+      hotkeyCard.childNodes[1].value = command;
+    }
+  }
+
+  _deleteHotkey(hotkeyCard) {
+    const { hotkey, command } = this._readHotkeyCardData(hotkeyCard);
+
+    if (hotkey === 'Hotkey') {
+      alert('You can not delete the blank hotkey card');
+      return;
+    }
+    if (confirm(`DELETE: ${hotkey}: ${command}`)) {
+      this.$activeEditHotkeyCard = null;
+      hotkeyCard.remove();
+    }
+  }
+  // Menu Functions: show/hide | enableLink
+  _showMenu(setVisible) {
+    this.$menu.style.display = setVisible ? 'block' : 'none';
+  }
+
+  _setLinkEnabled() {
+    pbnHotkeysLink.style.color = 'black';
+  }
+
+  // Other Functions
+  _hotkeyCodeToText(hotkey) {
+    if (hotkey === '') return '';
+    const [shiftKey, altKey, ctrlKey] = hotkey
+      .slice(-3)
+      .split('')
+      .map((keyString) => Boolean(+keyString));
+
+    const key = hotkey.slice(0, -3);
+    // TODO: add OS specific names
+    // Example: Alt == Option on macs
+    return (
+      (shiftKey & (key !== 'Shift') ? 'Shift+' : '') +
+      (altKey & (key !== 'Alt') ? 'Alt+' : '') +
+      (ctrlKey & (key !== 'Control') ? 'Ctrl+' : '') +
+      key
+    );
+  }
+  _clearAndRemoveEditHotkeyCard() {
+    // Clear and remove edit card
+    this._updateEditHotkeyCard('');
+    this.$hotkeyEditCard.remove();
+    this.$activeEditHotkeyCard.style.border = '';
+    this.$activeEditHotkeyCard = null;
+  }
+  _getHotkeysFromMenu() {
+    const hotkeyCards = Array.from(this.$hotkeys.childNodes);
+    const newHotkeysAndCommands = Object.fromEntries(
+      hotkeyCards.map((hotkeyCard) => {
+        const hotkey =
+          hotkeyCard.childNodes[0].childNodes[0].dataset.hotkeyCode;
+        const command = hotkeyCard.childNodes[1].value;
+
+        return [hotkey, command];
+      })
+    );
+
+    return newHotkeysAndCommands;
+  }
+
+  // onClick Handlers
+  _onClickSetHotkey(hotkeyCard) {
+    // TODO: add validation to insure no duplicate hotkeys exist.
+    const { hotkey, hotkeyText } = this._readEditHotkeyCardData();
+    const currentHotkeys = this._getHotkeysFromMenu();
+
+    if (currentHotkeys[hotkey] != undefined) {
+      alert('That hotkey is already assigned');
+      return;
+    }
+    this._updateHotkeyCardData(hotkeyCard, { hotkey, hotkeyText });
+
+    this._clearAndRemoveEditHotkeyCard();
+  }
+  _onClickHotkeyHandler(hotkeyCard) {
+    // Reset style on old activeEditHotkeyCard
+    if (this.$activeEditHotkeyCard) {
+      this.$activeEditHotkeyCard.style.border = '';
+    }
+
+    // Attach edit card to currently clicked card and set selected style
+    hotkeyCard.append(this.$hotkeyEditCard);
+    hotkeyCard.style.border = '1px solid black';
+
+    // Update current active hotkey card
+    this.$activeEditHotkeyCard = hotkeyCard;
+  }
+
   bindOnKeydown(handler) {
     document.addEventListener('keydown', handler);
   }
-  createUI() {
-    //Menu link
-    const menuLinkDiv = document.createElement('div');
-    menuLinkDiv.classList.add(
-      'TPBTOverlayScrollItem',
-      'TPBTOverlayScrollInfoItem'
-    );
-    menuLinkDiv.style.cssText = `position: fixed; 
-                     z-index: 1000;
-                     top: 2px;
-                     right: 2px;
-                     color: red;
-                     text-decoration: underline;
-                     cursor: pointer;
-                     `;
-    const a = document.createElement('a');
-    a.appendChild(document.createTextNode('PBN-Hotkeys'));
-    a.title = `red = not connected
-black = connected
-hotkeys by tomrule007`;
-    a.id = 'pbnHotkeysLink';
-    a.onclick = () => showMenu(true);
-    menuLinkDiv.append(a);
-    document.body.appendChild(menuLinkDiv);
-    console.log(menuLinkDiv);
-    //Hotkey Setup Menu
-    const menuDiv = document.createElement('div');
-    menuDiv.id = 'pbnHotkeysMenu';
-    menuDiv.classList.add(
-      'TW3Panel',
-      'TW3ContainerBorder',
-      'TW3ContainerBackground'
-    );
-    menuDiv.style.cssText =
-      'z-index: 8; right: 2px; top: 40px; position: fixed; display: none;';
+  /**
+   * Renders the given command with the options
+   * @param {'addHotkey'} viewCommand
+   * @param {Object} parameterObject
+   */
+  render(viewCommand, parameterObject) {
+    switch (viewCommand) {
+      case 'addHotkey':
+        this._createHotkeyCard(parameterObject);
+        break;
 
-    // menu label
-    const menuBarDiv = document.createElement('div');
-    menuBarDiv.style.cssText = 'display: flex; justify-content:	space-between;';
-    const menuLabelEl = document.createElement('span');
-    menuLabelEl.append(
-      document.createTextNode('Paintballnet-Hotkeys by tomrule007')
-    );
-    menuLabelEl.classList.add('tw3label');
-
-    // menu content container
-    const menuContentEl = document.createElement('div');
-    menuContentEl.id = 'pbnHotkeyMenuDisplay';
-    menuContentEl.classList.add('TPBTListBox');
-    menuContentEl.style.cssText =
-      'margin: 5px 2px; font-family: Lucida Console; font-size: 10pt; padding: 2px;';
-    console.log(window.pbnHotkeyMenuDisplay);
-    // menu close button
-    const closeButtonEl = document.createElement('button');
-    closeButtonEl.append(document.createTextNode('X'));
-    closeButtonEl.classList.add(
-      'TW3Button',
-      'TW3ButtonBackground',
-      'TW3ButtonBorder'
-    );
-    closeButtonEl.style.cssText = 'margin: 2px; font-size: 8pt;';
-    closeButtonEl.onclick = () => showMenu(false);
-
-    //save changes button
-    const saveButton = document.createElement('button');
-    saveButton.append(document.createTextNode('Save Changes'));
-    saveButton.classList.add(
-      'TW3Button',
-      'TW3ButtonBackground',
-      'TW3ButtonBorder'
-    );
-    saveButton.style.cssText = 'margin: 2px; font-size: 8pt;';
-    saveButton.onclick = saveChanges;
-
-    const saveButtonContainerEl = document.createElement('div');
-    saveButtonContainerEl.style.display = 'flex';
-    saveButtonContainerEl.style.justifyContent = 'center';
-
-    menuBarDiv.append(menuLabelEl, closeButtonEl);
-    saveButtonContainerEl.append(saveButton);
-    menuDiv.append(menuBarDiv, menuContentEl, saveButtonContainerEl);
-
-    document.body.appendChild(menuDiv);
-
-    Object.entries(savedHotkeys).forEach(([hotkey, command]) => {
-      createHotkeyCard(hotkey, command);
-    });
-    createHotkeyCard('Click to set', '');
-
-    return {
-      setLinkEnabled,
-    };
-  }
-}
-
-function getHotkeysFromMenu() {
-  const menuContentDiv = document.getElementById('pbnHotkeysMenu')
-    .childNodes[1];
-  const newHotkeysAndCommands = Object.fromEntries(
-    Array.from(menuContentDiv.childNodes).map((hotkeyCardContainer) => {
-      const hotkeyCard = hotkeyCardContainer.childNodes[0];
-      const hotkey = hotkeyCard.childNodes[0].childNodes[0].dataset.hotkeyCode;
-      const command = hotkeyCard.childNodes[1].innerText;
-      console.log({ hotkey, command });
-      return [hotkey, command];
-    })
-  );
-  return newHotkeysAndCommands;
-}
-function saveChanges() {
-  const newHotkeys = getHotkeysFromMenu();
-  window.localStorage.setItem('pbn-hotkeys', JSON.stringify(newHotkeys));
-  pbnHotkeys.hotkeys = newHotkeys;
-}
-
-const DEFAULT_COMMAND_TEXT = 'Click to enter command';
-function commandSpanOnFocus() {
-  // Clear default text on focus
-  if (this.innerText === DEFAULT_COMMAND_TEXT) {
-    this.innerText = '';
-  }
-}
-function commandSpanOnBlur() {
-  // Remove all line breaks.
-  this.childNodes.forEach((child) => {
-    if (child.tagName === 'BR') {
-      this.removeChild(child);
+      default:
+        throw Error(`Invalid viewCommand: ${viewCommand} `);
+        break;
     }
-  }, this);
-
-  // Reset default text if blank
-  if (this.innerText === '') {
-    this.innerText = DEFAULT_COMMAND_TEXT;
-  }
-}
-function createHotkeyCard(hotkey, command) {
-  const hotkeyCardContainer = document.createElement('div');
-  hotkeyCardContainer.style.cssText =
-    'margin: 2px; border-bottom: 1px solid grey;';
-  const hotkeyCard = document.createElement('div');
-  hotkeyCard.style.position = 'relative';
-  const hotkeyDivEl = document.createElement('div');
-  hotkeyDivEl.style.cssText =
-    'display: inline-block; min-width: 60px; textAlign: right; margin: 0px 2px';
-
-  const hotkeyEl = document.createElement('a');
-  hotkeyEl.dataset.hotkeyCode = hotkey;
-  hotkeyEl.append(document.createTextNode(hotkeyCodeToText(hotkey)));
-  hotkeyEl.onclick = setHotkeyClickHandler;
-  hotkeyDivEl.append(hotkeyEl);
-  const hotkeyCommandEl = document.createElement('span');
-  hotkeyCommandEl.append(document.createTextNode(command));
-  hotkeyCommandEl.style.outline = 'none';
-  hotkeyCommandEl.style.display = 'inline-block';
-
-  hotkeyCommandEl.contentEditable = true;
-  hotkeyCommandEl.onfocus = commandSpanOnFocus;
-  hotkeyCommandEl.onblur = commandSpanOnBlur;
-
-  hotkeyCardContainer.append(hotkeyCard);
-  hotkeyCard.append(hotkeyDivEl, hotkeyCommandEl);
-
-  window.pbnHotkeyMenuDisplay.appendChild(hotkeyCardContainer);
-}
-
-function showMenu(setVisible) {
-  pbnHotkeysMenu.style.display = setVisible ? 'block' : 'none';
-}
-function setLinkEnabled() {
-  pbnHotkeysLink.style.color = 'black';
-}
-
-function saveUpdatedHotkey(e) {
-  const newHotkey = window.hotkeySetContainer.childNodes[1].innerText;
-  const newHotkeyCode =
-    window.hotkeySetContainer.childNodes[1].dataset.hotkeyCode;
-  if (newHotkey) {
-    window.setHotkeyActive.childNodes[0].childNodes[0].innerText = newHotkey;
-    window.setHotkeyActive.childNodes[0].childNodes[0].dataset.hotkeyCode = newHotkeyCode;
-    window.hotkeySetContainer.remove();
-    window.setHotkeyActive.style.border = '';
-    window.setHotkeyActive.style.borderBottom = '';
-    window.setHotkeyActive = undefined;
-  }
-}
-
-function deleteHotkey(e) {
-  const hotkeyCardContainer = this.parentNode.parentNode.parentNode;
-
-  const hotkeyCard = hotkeyCardContainer.childNodes[0];
-  const hotkey = hotkeyCard.childNodes[0].childNodes[0].innerText;
-  const command = hotkeyCard.childNodes[1].innerText;
-  const confirmDelete = confirm(
-    `Confirm deletion of selected hotkey: 
-    ${hotkey}:   ${command}`
-  );
-  if (confirmDelete) {
-    window.setHotkeyActive = undefined;
-    hotkeyCardContainer.remove();
-  }
-}
-
-function setHotkeyClickHandler(e) {
-  console.log('GOO');
-  if (!window.hotkeySetContainer) {
-    console.log('create new div');
-    // create new div
-    const hotkeySetContainer = document.createElement('div');
-    window.hotkeySetContainer = hotkeySetContainer;
-    hotkeySetContainer.style.cssText =
-      'display: flex; text-align: center; font-weight: bold; background: white;';
-    const hotkeySetText = document.createTextNode('New hotkey:');
-    const hotkeyDiv = document.createElement('div');
-    hotkeyDiv.style.flex = '1 1';
-    const saveHotkeyButton = document.createElement('button');
-    saveHotkeyButton.append(document.createTextNode('Save'));
-    saveHotkeyButton.classList.add(
-      'TW3Button',
-      'TW3ButtonBackground',
-      'TW3ButtonBorder'
-    );
-    saveHotkeyButton.style.cssText = 'font-size: 8pt;';
-    saveHotkeyButton.onclick = saveUpdatedHotkey;
-
-    const deleteHotkeyButton = document.createElement('button');
-    deleteHotkeyButton.append(document.createTextNode('Delete'));
-    deleteHotkeyButton.classList.add(
-      'TW3Button',
-      'TW3ButtonBackground',
-      'TW3ButtonBorder'
-    );
-    deleteHotkeyButton.style.cssText = 'font-size: 8pt;';
-    deleteHotkeyButton.onclick = deleteHotkey;
-
-    hotkeySetContainer.append(
-      hotkeySetText,
-      hotkeyDiv,
-      saveHotkeyButton,
-      deleteHotkeyButton
-    );
-  }
-  const newParent = this.parentNode.parentNode;
-
-  //  reuse div
-  const oldParent = window.hotkeySetContainer.parentNode;
-  if (oldParent) {
-    oldParent.style.border = '';
-    oldParent.style.borderBottom = '1px solid grey';
   }
 
-  newParent.append(window.hotkeySetContainer);
-  newParent.style.border = '1px solid black';
-  window.setHotkeyActive = newParent;
-}
-
-function hotkeyCodeToText(hotkey) {
-  const [shiftKey, altKey, ctrlKey] = hotkey
-    .slice(-3)
-    .split('')
-    .map((keyString) => Boolean(+keyString));
-
-  const key = hotkey.slice(0, -3);
-  // TODO: add OS specific names
-  // Example: Alt == Option on macs
-  return (
-    (shiftKey & (key !== 'Shift') ? 'Shift+' : '') +
-    (altKey & (key !== 'Alt') ? 'Alt+' : '') +
-    (ctrlKey & (key !== 'Control') ? 'Ctrl+' : '') +
-    key
-  );
+  /**
+   * Registers viewEvent handlers.
+   * @param {'onSaveChanges'|'onKeydown'} eventName
+   * @param {function} handler
+   */
+  bindEvent(eventName, handler) {
+    switch (eventName) {
+      case 'onSaveChanges':
+        this.$menuSaveButton.addEventListener('click', () => {
+          const hotkeyData = this._getHotkeysFromMenu();
+          handler(hotkeyData);
+        });
+        break;
+      case 'onKeydown':
+        document.addEventListener('keydown', handler);
+        break;
+      default:
+        throw Error(`Invalid eventName: ${eventName} `);
+        break;
+    }
+  }
 }

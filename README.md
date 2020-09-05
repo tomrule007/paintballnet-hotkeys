@@ -1,30 +1,17 @@
-# paintballnet-hotkeys
+# paintballnet-hotkeys 1.2.0
 
 Bookmarklet that allows users to create hotkeys for paintballnet.net",
 
 ---
 
-## Default hotkeys
+## HOW TO USE
 
-| KEY     | COMMAND                                                     |
-| ------- | ----------------------------------------------------------- |
-| r       | reload                                                      |
-| e       | get token & get flag & put token jacket & put flag jacket   |
-| q       | swap & get gun back & put %lhand back                       |
-| shift+E | get token jacket & sell token & get flag jacket & sell flag |
-| shift+R | game ready auto                                             |
-| shift+Q | game ready standby                                          |
-
-## Using Bookmarklet
-
-1.  make sure to have the bookmarklet added to your bookmarkbar.
-
-    \*Link to current build [bookmarklet page](https://tomrule007.github.io/paintballnet-hotkeys/build/index.html)\*
+1.  Goto [bookmarklet page](https://tomrule007.github.io/paintballnet-hotkeys/build/index.html) and copy `Bookmarklet` link to your browser bookmarks.
 
 2.  Open [http://paintballnet.net/play](http://paintballnet.net/play)
-3.  Click the `Bookmarklet` bookmark
+3.  With `paintballnet.net/play` tab active click the `Bookmarklet` bookmark
 
-\*Must click on the bookmarklet before connecting to the server. (display in upper righthand corner will turn black when connected)
+\*Must click on the `Bookmarklet` before connecting to the server. (display in upper righthand corner will turn black when connected)
 
 ---
 
@@ -57,14 +44,16 @@ Modify `src/savedHotkeys.js` and redo `Generate bookmarklet` instructions
 ## Future features
 
 - [x] add status label to show hotkeys are working
-- [ ] add custom hotkey configure menu
+- [x] add custom hotkey configure menu
   - [x] basic ui
   - [x] functioning save button
-  - [ ] working delete button
-  - [ ] working add new hotkey feature
-  - [ ] bulk export/import feature
+  - [x] working delete button
+  - [x] working add new hotkey feature
+- [ ] bulk export/import feature
+- [ ] Add hotkey profiles that can be toggled via other hotkeys - this would allow players to make equipment specific key binds
 
 ## Version History
 
 - 1.0.0: First version with hard bound hotkeys
 - 1.1.0: Rough working UI (still missing lots of features and buggy)
+- 1.2.0: UI is fully functioning! User can Create, Update, Save and Delete custom hotkeys

@@ -3,26 +3,28 @@ export default class Controller {
     this.view = view;
     this.model = model;
 
-    // initialize ui
-    this.view.createUI();
-
     // bind event listeners
-    document.addEventListener('keydown', this.handleKeydown);
+    view.bindEvent('onKeydown', (e) => this.handleKeydown(e));
+    view.bindEvent('onSaveChanges', (hotkeyData) => {
+      this.model.setHotkeys(hotkeyData);
+    });
+
+    // Populate menu with saved hotkeys.
+    Object.entries(model.hotkeys).forEach(([hotkey, command]) => {
+      view.render('addHotkey', { hotkey, command });
+    });
+    // Add one blank hotkeyCard
+    view.render('addHotkey');
   }
+
   handleKeydown = ({ key, shiftKey, altKey, ctrlKey }) => {
-    console.log(this);
     const hotkey = key + +shiftKey + +altKey + +ctrlKey;
-    console.log(hotkey);
     const chatboxIsNotActive = !(
       window.Component592 === document.activeElement
     );
 
-    if (window.setHotkeyActive) {
-      window.hotkeySetContainer.childNodes[1].dataset.hotkeyCode = hotkey;
-      window.hotkeySetContainer.childNodes[1].innerText = hotkeyCodeToText(
-        hotkey
-      );
-
+    if (this.view.$activeEditHotkeyCard) {
+      this.view._updateEditHotkeyCard(hotkey);
       return;
     }
 
