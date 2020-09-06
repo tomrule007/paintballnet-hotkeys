@@ -6,12 +6,12 @@ Bookmarklet that allows users to create hotkeys for paintballnet.net",
 
 ## HOW TO USE
 
-1.  Goto [bookmarklet page](https://tomrule007.github.io/paintballnet-hotkeys/build/index.html) and copy `Bookmarklet` link to your browser bookmarks.
+1.  Goto [bookmarklet page](https://tomrule007.github.io/paintballnet-hotkeys/build/index.html) and copy `PBN-Hotkeys` link to your browser bookmarks.
 
 2.  Open [http://paintballnet.net/play](http://paintballnet.net/play)
-3.  With `paintballnet.net/play` tab active click the `Bookmarklet` bookmark
+3.  With `paintballnet.net/play` tab active click the `PBN-Hotkeys` bookmark
 
-\*Must click on the `Bookmarklet` before connecting to the server. (display in upper righthand corner will turn black when connected)
+\*Must click on the `PBN-Hotkeys` bookmark before connecting to the server. (Menu link in upper right hand corner will turn black when connected)
 
 ---
 
@@ -25,19 +25,23 @@ $cd paintballnet-hotkeys
 $npm install
 ```
 
+Development
+
+```bash
+$npm run start
+```
+
+that runs the script and with auto loading web-dev server. Also includes the paintballnet css classes for a better feel of actual ui interface on paintballnet and supports hot reloading for speedy development.
+
 ### Generate bookmarklet
+
+Production build:
 
 ```bash
 $npm run build
 ```
 
-Open --->`build/index.html` & add bookmarklet to bookmark bar.
-
-### To change hotkeys
-
-Use the in game UI to set the hotkeys and commands (\*This is still a work in progress and may be a little buggy)
-
-Modify `src/savedHotkeys.js` and redo `Generate bookmarklet` instructions
+generates a single `build/index.html` file with bookmarklet link that can be hosted or opened directly in the browser.
 
 ---
 
