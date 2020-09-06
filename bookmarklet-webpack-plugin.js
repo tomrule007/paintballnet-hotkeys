@@ -1,4 +1,5 @@
 const validateOptions = require('schema-utils');
+const { ConcatSource } = require('webpack-sources');
 
 // schema for options object
 const schema = {
@@ -16,11 +17,33 @@ class BookmarkletWebpackPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.done.tap('BookmarkletWebpackPlugin', (
-      stats /* stats is passed as an argument when done hook is tapped.  */
-    ) => {
-      console.log('BookmarkletWebpackPlugin');
-    });
+    compiler.hooks.compilation.tap(
+      'BookmarkletWrapperPlugin',
+      (compilation) => {
+        compilation.hooks.afterOptimizeChunkAssets.tap('MyPlugin', (chunks) => {
+          chunks
+            .filter((chunk) => chunk.name === 'main')
+            .forEach((chunk) => {
+              // console.log('filtered chunk', chunk);
+              chunk.files.forEach((file) => {
+                console.log('concat source: ', file);
+                // compilation.assets[file] = new ConcatSource(
+                //   '/**Sweet Banner**/',
+                //   '\n',
+                //   compilation.assets[file]
+                // );
+                const encodedCode = encodeURIComponent(
+                  compilation.assets[file]._value
+                );
+
+                compilation.assets[
+                  file
+                ]._value = `javascript:(function(){${compilation.assets[file]._value}})()`;
+              });
+            });
+        });
+      }
+    );
   }
 }
 
