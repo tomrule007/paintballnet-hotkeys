@@ -1,0 +1,172 @@
+/* paintballnet.net - play/res/PBTerm-NodeJS.css */
+.TPBTOverlayScrollItem {
+  font-size: 10pt;
+  white-space: pre-wrap;
+  padding: 2px;
+  background-color: rgba(240, 240, 240, 0.75);
+  border-top: 1px solid #f0f0f0;
+  border-left: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+  border-radius: 4px;
+  margin: 2px;
+}
+.TPBTOverlayScrollInfoItem {
+  font-size: 10pt;
+  white-space: pre-wrap;
+  padding: 2px;
+  background-color: rgba(240, 240, 240, 0.75);
+  border-top: 1px solid #f0f0f0;
+  border-left: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+  border-radius: 4px;
+  margin: 2px;
+}
+
+.TPBTListBox {
+  border-top: 1px solid #979797;
+  border-left: 1px solid #979797;
+  border-bottom: 1px solid #ffffff;
+  border-right: 1px solid #ffffff;
+  border-radius: 4px;
+
+  -webkit-box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+  -moz-box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+  -ms-box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+  -o-box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+  box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+}
+
+/*  paintballnet.net - play/res/app.css */
+.TW3Panel {
+  padding: 2px;
+  cursor: default;
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: #efebe7;
+  outline-offset: -4px;
+}
+
+.TW3ContainerBorder {
+  border-radius: 4px;
+  border-top: 1px solid rgba(250, 250, 250, 0.7);
+  border-left: 1px solid rgba(250, 250, 250, 0.7);
+  border-right: 1px solid rgba(240, 240, 240, 0.5);
+  border-bottom: 1px solid rgba(240, 240, 240, 0.5);
+  -webkit-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.3);
+  -moz-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.3);
+  -ms-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.3);
+  -o-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.3);
+  box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.3);
+}
+
+.TW3ContainerBackground {
+  background-color: #f5f2ef;
+}
+
+.TW3Label {
+  padding: 0px !important;
+  cursor: default;
+}
+
+.TW3Button {
+  padding: 2px;
+  cursor: default;
+  font-size: 18px;
+  font-weight: bold;
+  color: #494949;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);
+}
+
+.TW3Button:active:enabled {
+  padding: 2px;
+  color: #494949;
+  text-shadow: -1px -1px 1px rgba(255, 255, 255, 1);
+}
+
+.TW3ButtonBackground {
+  background-color: #f8f8f8;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0, #ffffff),
+    color-stop(100, #f0f0f0)
+  );
+  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
+  /* background-image: filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F0F0F0',GradientType=0); */
+  background-image: linear-gradient(to bottom, #ffffff 0%, #f0f0f0 100%);
+}
+
+.TW3ButtonBackground:active {
+  background-color: #ededed;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0, #e7e7e7),
+    color-stop(100, #ffffff)
+  );
+  background-image: -webkit-linear-gradient(top, #e7e7e7 0%, #ffffff 100%);
+  background-image: -moz-linear-gradient(top, #e7e7e7 0%, #ffffff 100%);
+  background-image: -ms-linear-gradient(top, #e7e7e7 0%, #ffffff 100%);
+  /* background-image: filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E7E7E7', endColorstr='#FFFFFF',GradientType=0); */
+  background-image: linear-gradient(to bottom, #e7e7e7 0%, #ffffff 100%);
+}
+
+.TW3ButtonBorder {
+  border-radius: 4px;
+  border-top: 1px solid rgba(250, 250, 250, 0.7);
+  border-left: 1px solid rgba(250, 250, 250, 0.7);
+  border-right: 1px solid rgba(240, 240, 240, 0.5);
+  border-bottom: 1px solid rgba(240, 240, 240, 0.5);
+  -webkit-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+  -moz-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+  -ms-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+  -o-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+  box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+}
+
+.TW3ButtonBorder:active {
+  border-radius: 4px;
+  border-top: 1px solid rgba(240, 240, 240, 0.5);
+  border-left: 1px solid rgba(240, 240, 240, 0.5);
+  border-right: 1px solid rgba(250, 250, 250, 0.7);
+  border-bottom: 1px solid rgba(250, 250, 250, 0.7);
+
+  -webkit-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+  -moz-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+  -ms-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+  -o-box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+  box-shadow: 0px 0px 1px 1px rgba(81, 81, 81, 0.8);
+}
+
+.TW3EditBox {
+  padding: 2px;
+  resize: none;
+  font-size: 14px;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  -o-user-select: text;
+  user-select: text;
+}
+
+.TW3EditBorder {
+  border-top: 1px solid #979797;
+  border-left: 1px solid #979797;
+  border-bottom: 1px solid #ffffff;
+  border-right: 1px solid #ffffff;
+  -webkit-box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+  -moz-box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+  -ms-box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+  -o-box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+  box-shadow: inset 0 0 3px rgba(18, 18, 18, 0.6);
+}
+
+.TW3EditBackground {
+  background-color: #ffffff;
+}

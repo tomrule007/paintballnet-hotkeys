@@ -8,5 +8,14 @@ module.exports = merge(common, {
     filename: 'main.[contentHash].js',
     path: path.resolve(__dirname, 'dist'),
   },
-  plugins: [new BookmarkletWebpackPlugin()],
+  plugins: [
+    new BookmarkletWebpackPlugin({
+      input: 'main',
+      output: 'index.html',
+      repo: 'https://github.com/tomrule007/paintballnet-hotkeys',
+      linkName: 'PBN-Hotkeys v1.2.0',
+      pageTitle: 'Paintballnet-hotkeys v1.2.0',
+      author: 'Thomas J. Herzog (@tomrule007)',
+    }),
+  ],
 });
