@@ -1,4 +1,3 @@
-import { savedHotkeys } from './model';
 import { createWebSocketProxy } from './webSocketProxy';
 import template from './template';
 /**
@@ -63,6 +62,7 @@ export default class View {
     const hotkeyText = $editCardHotkeyDisplay.innerText;
     return { hotkey, hotkeyText };
   }
+
   _updateEditHotkeyCard(hotkey) {
     const $editCardHotkeyDisplay = this.$hotkeyEditCard.childNodes[1];
 
@@ -121,13 +121,14 @@ export default class View {
       hotkeyCard.remove();
     }
   }
+
   // Menu Functions: show/hide | enableLink
   _showMenu(setVisible) {
     this.$menu.style.display = setVisible ? 'block' : 'none';
   }
 
   _setLinkEnabled() {
-    pbnHotkeysLink.style.color = 'black';
+    this.$menuLink.style.color = 'black';
   }
 
   // Other Functions
@@ -148,6 +149,7 @@ export default class View {
       key
     );
   }
+
   _clearAndRemoveEditHotkeyCard() {
     // Clear and remove edit card
     this._updateEditHotkeyCard('');
@@ -155,6 +157,7 @@ export default class View {
     this.$activeEditHotkeyCard.style.border = '';
     this.$activeEditHotkeyCard = null;
   }
+
   _getHotkeysFromMenu() {
     const hotkeyCards = Array.from(this.$hotkeys.childNodes);
     const newHotkeysAndCommands = Object.fromEntries(
@@ -176,7 +179,7 @@ export default class View {
     const { hotkey, hotkeyText } = this._readEditHotkeyCardData();
     const currentHotkeys = this._getHotkeysFromMenu();
 
-    if (currentHotkeys[hotkey] != undefined) {
+    if (currentHotkeys[hotkey] !== undefined) {
       alert('That hotkey is already assigned');
       return;
     }
@@ -184,6 +187,7 @@ export default class View {
 
     this._clearAndRemoveEditHotkeyCard();
   }
+
   _onClickHotkeyHandler(hotkeyCard) {
     // Reset style on old activeEditHotkeyCard
     if (this.$activeEditHotkeyCard) {
@@ -201,6 +205,7 @@ export default class View {
   bindOnKeydown(handler) {
     document.addEventListener('keydown', handler);
   }
+
   /**
    * Renders the given command with the options
    * @param {'addHotkey'} viewCommand
@@ -214,7 +219,6 @@ export default class View {
 
       default:
         throw Error(`Invalid viewCommand: ${viewCommand} `);
-        break;
     }
   }
 
@@ -236,7 +240,6 @@ export default class View {
         break;
       default:
         throw Error(`Invalid eventName: ${eventName} `);
-        break;
     }
   }
 }

@@ -1,8 +1,6 @@
-import { savedHotkeys } from './model';
-
 function createUI() {
-  //TODO: convert to template literal
-  //Menu link
+  // TODO: convert to template literal
+  // Menu link
   const menuLinkDiv = document.createElement('div');
   menuLinkDiv.classList.add(
     'TPBTOverlayScrollItem',
@@ -24,7 +22,7 @@ hotkeys by tomrule007`;
   a.id = 'pbnHotkeysLink';
   menuLinkDiv.append(a);
   document.body.appendChild(menuLinkDiv);
-  //Hotkey Setup Menu
+  // Hotkey Setup Menu
   const menuDiv = document.createElement('div');
   menuDiv.id = 'pbnHotkeysMenu';
   menuDiv.classList.add(
@@ -60,7 +58,7 @@ hotkeys by tomrule007`;
   );
   closeButtonEl.style.cssText = 'margin: 2px; font-size: 8pt;';
   closeButtonEl.id = 'pbnHotkeysMenuCloseButton';
-  //save changes button
+  // save changes button
   const saveButton = document.createElement('button');
   saveButton.append(document.createTextNode('Save Changes'));
   saveButton.classList.add(

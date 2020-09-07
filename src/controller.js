@@ -17,6 +17,10 @@ export default class Controller {
     view.render('addHotkey');
   }
 
+  setView() {
+    // Todo: move view ui setup calls here
+  }
+
   handleKeydown({ key, shiftKey, altKey, ctrlKey }) {
     const hotkey = key + +shiftKey + +altKey + +ctrlKey;
     const chatboxIsNotActive = !(
@@ -29,7 +33,7 @@ export default class Controller {
     }
 
     if (chatboxIsNotActive && this.model.hotkeys[hotkey]) {
-      sendPortal(`{"id":"05","text":"${this.model.hotkeys[hotkey]}"}`);
+      window.sendPortal(`{"id":"05","text":"${this.model.hotkeys[hotkey]}"}`);
     }
   }
 }
