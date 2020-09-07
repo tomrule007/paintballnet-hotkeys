@@ -8,7 +8,8 @@
     "build": "webpack --config webpack.prod.js",
     "test": "jest",
     "coverage": "jest --coverage --collectCoverageFrom='src/**/*.js'",
-    "coverageReport": "jest --coverage --coverageDirectory='coverage' --collectCoverageFrom='src/**/*.js'"
+    "coverageReport": "jest --coverage --coverageDirectory='coverage' --collectCoverageFrom='src/**/*.js'",
+    "lint": "eslint ."
   },
   "keywords": [
     "paintballnet",
@@ -30,6 +31,12 @@
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^4.2.2",
+    "eslint": "^7.8.1",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "html-webpack-plugin": "^4.4.1",
     "jest": "^26.4.2",
     "schema-utils": "^2.7.1",
