@@ -1,4 +1,4 @@
-const BookmarkletWebpackPlugin = require('./bookmarklet-webpack-plugin');
+const BookmarkletPlugin = require('bookmarklet-webpack-plugin');
 const path = require('path');
 const common = require('./webpack.common');
 const { merge } = require('webpack-merge');
@@ -9,7 +9,7 @@ module.exports = merge(common, {
     path: path.resolve(__dirname, 'build'),
   },
   plugins: [
-    new BookmarkletWebpackPlugin({
+    new BookmarkletPlugin({
       input: 'main',
       output: 'index.html',
       repo: 'https://github.com/tomrule007/paintballnet-hotkeys',
