@@ -146,5 +146,15 @@ function createHotkeyEditCard() {
   return [hotkeySetContainer, setHotkeyButton, deleteHotkeyButton];
 }
 
-const template = { createUI, createHotkeyCard, createHotkeyEditCard };
+function createHUD() {
+  const hud = document.createElement('div');
+  hud.setAttribute(
+    'style',
+    'position: absolute; top: 0px; left: 0px; right: 0px; height: 50%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; z-index: 20000000; pointer-events: none;'
+  );
+  document.body.append(hud);
+  return hud;
+}
+
+const template = { createUI, createHotkeyCard, createHotkeyEditCard, createHUD };
 export default template;

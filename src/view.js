@@ -11,10 +11,14 @@ import template from './template';
  */
 export default class View {
   constructor(props) {
+    this.handleMessage = (msg) => console.log(msg);
     // Setup webSocketProxy spy
-    createWebSocketProxy(() => {
-      this._setLinkEnabled();
-    });
+    createWebSocketProxy(
+      () => {
+        this._setLinkEnabled();
+      },
+      (msg) => this.handleMessage(msg)
+    );
 
     // Create and Inject UI
     this.createUI = template.createUI;
@@ -35,6 +39,7 @@ export default class View {
     );
 
     // Save DOM Refs
+    this.$hud = template.createHUD();
     this.$activeEditHotkeyCard = null;
     this.$injectionRoot = document.body;
     this.$menuLink = document.querySelector('#pbnHotkeysLink');
@@ -129,6 +134,17 @@ export default class View {
 
   _setLinkEnabled() {
     this.$menuLink.style.color = 'black';
+  }
+
+  // HUD functions: setMsg
+
+  _setHudMsg(text, time = 2000) {
+    const textEl = document.createElement('h1');
+    textEl.innerText = text;
+    this.$hud.appendChild(textEl);
+    setTimeout(() => {
+      this.$hud.removeChild(textEl);
+    }, time);
   }
 
   // Other Functions
@@ -229,6 +245,9 @@ export default class View {
    */
   bindEvent(eventName, handler) {
     switch (eventName) {
+      case 'onMessage':
+        this.handleMessage = handler;
+        break;
       case 'onSaveChanges':
         this.$menuSaveButton.addEventListener('click', () => {
           const hotkeyData = this._getHotkeysFromMenu();
