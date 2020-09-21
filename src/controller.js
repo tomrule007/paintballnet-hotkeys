@@ -16,8 +16,52 @@ export default class Controller {
     // Add one blank hotkeyCard
     view.render('addHotkey');
 
-    //test message
-    this.view.render('hudMessage', { text: 'test text' });
+    this.view.render('hudMessage', { text: 'PBN-Mod v1.0.0' });
+
+    // TEMP Model data
+    this.taggedMessagePreds = [
+      {
+        name: 'gameName',
+        matchPhrase: 'GAME: You are in a ',
+        replacePair: [/^GAME\: You are in a ([a-z]* game)\.$/i, '$1'],
+      },
+      {
+        name: 'splatMoney',
+        matchPhrase: 'You are given an instant ',
+        replacePair: [/^You are given an instant (\$\d+)!$/i, '+$1'],
+      },
+      {
+        name: 'survivedMoney',
+        matchPhrase: 'You earned ',
+        replacePair: [/You earned (\$\d+).*/i, '+$1'],
+      },
+      {
+        name: 'botRoster',
+        matchPhrase: 'Bot Roster:',
+        replacePair: [
+          /^Bot Roster:((?:\r\n[a-z ]*)+)/im,
+          (match, p1) => `${p1.split('\r\n').length - 1} Bots`,
+        ],
+      },
+      {
+        name: 'splattedYou',
+        matchPhrase: 'splatted you in the',
+        replacePair: [
+          /^.*\((.*)\) splatted you in the.*$/i,
+          '$1 splatted you!',
+        ],
+      },
+      {
+        name: 'soldItem',
+        matchPhrase: 'You sell the',
+        replacePair: [/You sell the (\w+) for (\$\d+)\./i, '+$2 ($1)'],
+      },
+      {
+        name: 'youSplatted',
+        matchPhrase: 'You splatted',
+        replacePair: [/^You splatted (.*) in the (.*)/i, '$1 ($2)'],
+      },
+    ];
   }
 
   setView() {
@@ -25,66 +69,21 @@ export default class Controller {
   }
 
   handleMessage(msgEvent) {
-    // should probably parse after some basic checking like slicing for ID
-    const data = JSON.parse(msgEvent.data);
-    switch (data.id) {
-      case '10':
-        console.log(data.text);
-        const gameName = data.text.match(
-          /^GAME\: You are in a ([a-z]* game)\.$/i
-        );
-        if (gameName) {
-          this.view.render('hudMessage', { text: gameName[1] });
-        }
-        const splatMoney = data.text.match(
-          /^You are given an instant (\$\d+)\!$/i
-        );
-        if (splatMoney) {
-          this.view.render('hudMessage', { text: `+${splatMoney[1]}` });
-        }
-        const survivedMoney = data.text.match(
-          /You earned (\$\d+) for surviving!/i
-        );
-        if (survivedMoney) {
-          console.log({ survivedMoney });
-          this.view.render('hudMessage', { text: `+${survivedMoney[1]}` });
-        }
-        const botRoster = data.text.match(/^Bot Roster\:((?:\r\n[a-z ]*)+)/im);
-        if (botRoster) {
-          console.log({ botRoster });
-          const botCount = botRoster[0].split('\r\n').length - 1;
-          this.view.render('hudMessage', { text: `${botCount} Bots` });
-          return;
-        }
-        const splattedYou = data.text.match(/\((.*)\) splatted you in the/i);
-        if (splattedYou) {
-          this.view.render('hudMessage', {
-            text: `${splattedYou[1]} splatted you!`,
-            time: 5000,
-          });
-          return;
-        }
-        const soldItem = data.text.match(/You sell the (\w+) for (\$\d+)\./i);
-        if (soldItem) {
-          this.view.render('hudMessage', {
-            text: `+${soldItem[2]} (${soldItem[1]})`,
-          });
-          return;
-        }
-        const youSplatted = data.text.match(/^You splatted (.*) in the (.*)/i);
-        if (youSplatted) {
-          this.view.render('hudMessage', {
-            text: `${youSplatted[1]} (${youSplatted[2]})`,
-          });
-          return;
-        }
-        break;
-
-      default:
-        // console.log('rest', { id, data });
-        break;
+    const id = msgEvent.data.slice(7, 9);
+    if (id === '10') {
+      const { text } = JSON.parse(msgEvent.data);
+      const match = this.taggedMessagePreds.find(({ matchPhrase }) =>
+        text.includes(matchPhrase)
+      );
+      if (match) {
+        const response = text.replace(...match.replacePair);
+        this.view.render('hudMessage', {
+          text: response.trim(),
+        });
+      } else {
+        console.log(text);
+      }
     }
-    // console.log('after switch', data);
   }
 
   handleKeydown({ key, shiftKey, altKey, ctrlKey }) {
