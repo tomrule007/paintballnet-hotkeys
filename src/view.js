@@ -14,6 +14,8 @@ export default class View {
     // DEBUGGING: Global this access
     window.pbnView = this;
     // Place holder handle message callback
+    this.fontFamily = null;
+    this._loadCustomFont('adventure');
     this._handleMessageCallback = console.log;
     // Setup webSocketProxy spy
     createWebSocketProxy(
@@ -146,6 +148,8 @@ export default class View {
     const textEl = document.createElement('h1');
     textEl.innerText = text;
     textEl.style.cssText = `
+    ${this.fontFamily}
+    margin: 0 0;
     perspective: inherit;
     transform-style: preserve-3d;
     transform: translateZ(1px);
@@ -157,6 +161,23 @@ export default class View {
   }
 
   // Other Functions
+  _loadCustomFont(fontName) {
+    // Load custom font
+    const url = `https://tomrule007.github.io/paintballnet-hotkeys/Fonts/${fontName}.ttf`;
+    console.log(url);
+    new FontFace(fontName, `url(${url})`)
+      .load()
+      .then((loaded_face) => {
+        // use font here
+        document.fonts.add(loaded_face);
+        console.log('loaded', { loaded_face }, fontName, this, window.pbnView);
+        this.fontFamily = `font-family: ${fontName};`;
+      })
+      .catch(function (error) {
+        console.log({ error });
+      });
+  }
+
   _hotkeyCodeToText(hotkey) {
     if (hotkey === '') return '';
     const [shiftKey, altKey, ctrlKey] = hotkey
