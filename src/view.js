@@ -11,13 +11,16 @@ import template from './template';
  */
 export default class View {
   constructor(props) {
-    this.handleMessage = (msg) => console.log(msg);
+    // DEBUGGING: Global this access
+    window.pbnView = this;
+    // Place holder handle message callback
+    this._handleMessageCallback = console.log;
     // Setup webSocketProxy spy
     createWebSocketProxy(
       () => {
         this._setLinkEnabled();
       },
-      (msg) => this.handleMessage(msg)
+      (msgEvent) => this._handleMessageCallback(msgEvent)
     );
 
     // Create and Inject UI
@@ -136,11 +139,17 @@ export default class View {
     this.$menuLink.style.color = 'black';
   }
 
-  // HUD functions: setMsg
+  // HUD functions: _createHudMessage
 
-  _setHudMsg(text, time = 2000) {
+  _createHudMessage({ text, time = 2000 } = {}) {
+    console.log('hud text', text);
     const textEl = document.createElement('h1');
     textEl.innerText = text;
+    textEl.style.cssText = `
+    perspective: inherit;
+    transform-style: preserve-3d;
+    transform: translateZ(1px);
+    pointer-events: none;`;
     this.$hud.appendChild(textEl);
     setTimeout(() => {
       this.$hud.removeChild(textEl);
@@ -229,6 +238,9 @@ export default class View {
    */
   render(viewCommand, parameterObject) {
     switch (viewCommand) {
+      case 'hudMessage':
+        this._createHudMessage(parameterObject);
+        break;
       case 'addHotkey':
         this._createHotkeyCard(parameterObject);
         break;
@@ -245,8 +257,11 @@ export default class View {
    */
   bindEvent(eventName, handler) {
     switch (eventName) {
+      case 'onMouseMove':
+        this._handleMouseMove = handler;
+        break;
       case 'onMessage':
-        this.handleMessage = handler;
+        this._handleMessageCallback = handler;
         break;
       case 'onSaveChanges':
         this.$menuSaveButton.addEventListener('click', () => {
