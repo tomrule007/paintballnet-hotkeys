@@ -32,13 +32,6 @@ describe('Controller', () => {
   });
   describe('event handlers', () => {
     describe('handleMessage', () => {
-      const messageAndExecptedResponse = [
-        [
-          'You splatted a kamikazi bot in the circuitry!',
-          'a kamikazi bot (circuitry!)',
-        ],
-      ];
-
       // case to add:  ${'+$85'} | ${'  You earned $85 for being on the winning team!'}
       it.each`
         expected                         | given
