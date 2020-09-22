@@ -1,0 +1,84 @@
+.pbnMenuLink {
+  position: fixed;
+  z-index: 1000;
+  top: 2px;
+  right: 2px;
+  color: red;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.pbnMenu {
+  z-index: 8;
+  right: 2px;
+  top: 40px;
+  position: fixed;
+}
+
+.hidden {
+  display: none;
+}
+
+.pbnMenuBar {
+  display: flex;
+  justify-content: space-between;
+}
+.pbnMenuContent {
+  margin: 5px 2px;
+  font-family: Lucida Console;
+  font-size: 10pt;
+  padding: 2px;
+}
+
+.pbnMenuButton {
+  margin: 2px;
+  font-size: 8pt !important;
+}
+
+.pbnMenuFooter {
+  display: flex;
+  justify-content: center;
+}
+
+.pbnHotkeyCard {
+  position: relative;
+}
+
+.pbnHotkeyDiv {
+  display: inline-block;
+  min-width: 60px;
+  textalign: right;
+  margin: 0px 2px;
+}
+
+.pbnCommandInput {
+  width: 350px;
+}
+
+.pbnHotkeyEditCard {
+  display: flex;
+  text-align: center;
+  font-weight: bold;
+  background: white;
+}
+
+.pbnHotkeyEditCardEl {
+  flex: 1 1;
+}
+
+.pbnHud {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 20000000;
+  pointer-events: none;
+  perspective: inherit;
+  transform-style: preserve-3d;
+  transform: translateZ(1px);
+}
