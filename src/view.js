@@ -144,7 +144,6 @@ export default class View {
   // HUD functions: _createHudMessage
 
   _createHudMessage({ text, time = 2000 } = {}) {
-    console.log('hud text', text);
     const textEl = document.createElement('h1');
     textEl.innerText = text;
     textEl.style.cssText = `
@@ -169,12 +168,9 @@ export default class View {
       .then((loadedFace) => {
         // use font here
         document.fonts.add(loadedFace);
-        console.log('loaded', { loadedFace }, fontName, this, window.pbnView);
         this.fontFamily = `font-family: ${fontName};`;
       })
-      .catch(function (error) {
-        console.log({ error });
-      });
+      .catch(console.error);
   }
 
   _hotkeyCodeToText(hotkey) {

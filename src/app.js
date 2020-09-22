@@ -12,6 +12,5 @@ export default function () {
     const controller = new Controller(view, model);
 
     controller.setView();
-    console.log('PBN-Hotkeys by tomrule007');
   }
 }

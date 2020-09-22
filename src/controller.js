@@ -80,8 +80,6 @@ export default class Controller {
         this.view.render('hudMessage', {
           text: response.trim(),
         });
-      } else {
-        console.log(text);
       }
     }
   }
