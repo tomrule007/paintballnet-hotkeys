@@ -16,7 +16,7 @@ export default class View {
     // Place holder handle message callback
     this.fontFamily = null;
     this._loadCustomFont('adventure');
-    this._handleMessageCallback = console.log;
+    this._handleMessageCallback = () => {};
     // Setup webSocketProxy spy
     createWebSocketProxy(
       () => {
@@ -164,7 +164,6 @@ export default class View {
   _loadCustomFont(fontName) {
     // Load custom font
     const url = `https://tomrule007.github.io/paintballnet-hotkeys/Fonts/${fontName}.ttf`;
-    console.log(url);
     new FontFace(fontName, `url(${url})`)
       .load()
       .then((loaded_face) => {

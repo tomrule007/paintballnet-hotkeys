@@ -2,7 +2,7 @@ import View from '../view';
 import { screen } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 
-describe('View', () => {
+xdescribe('View', () => {
   beforeEach(() => {
     // Set up blank mock dom
     document.body.innerHTML = '<div> </div>';
