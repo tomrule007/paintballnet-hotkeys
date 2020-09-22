@@ -1,3 +1,3 @@
 module.exports = {
-  modules: true,
+  modules: (filename) => filename.endsWith('.module.css'),
 };
