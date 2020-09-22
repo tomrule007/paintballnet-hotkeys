@@ -154,7 +154,8 @@ export default class View {
     // Clear and remove edit card
     this._updateEditHotkeyCard('');
     this.$hotkeyEditCard.remove();
-    this.$activeEditHotkeyCard.style.border = '';
+    this.$activeEditHotkeyCard &&
+      (this.$activeEditHotkeyCard.style.border = '');
     this.$activeEditHotkeyCard = null;
   }
 
