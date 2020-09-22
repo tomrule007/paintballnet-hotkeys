@@ -3,9 +3,9 @@ export function createWebSocketProxy(
   handleMessageCallback
 ) {
   var WebSocketProxy = new Proxy(window.WebSocket, {
-    construct: function (target, args) {
+    construct: function (Target, args) {
       // create WebSocket instance
-      const instance = new target(...args);
+      const instance = new Target(...args);
 
       const closeHandler = (event) => {
         // remove event listeners

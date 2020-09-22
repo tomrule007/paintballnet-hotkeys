@@ -23,7 +23,7 @@ export default class Controller {
       {
         name: 'gameName',
         matchPhrase: 'GAME: You are in a ',
-        replacePair: [/^GAME\: You are in a ([a-z]* game)\.$/i, '$1'],
+        replacePair: [/^GAME: You are in a ([a-z]* game)\.$/i, '$1'],
       },
       {
         name: 'splatMoney',

@@ -166,10 +166,10 @@ export default class View {
     const url = `https://tomrule007.github.io/paintballnet-hotkeys/Fonts/${fontName}.ttf`;
     new FontFace(fontName, `url(${url})`)
       .load()
-      .then((loaded_face) => {
+      .then((loadedFace) => {
         // use font here
-        document.fonts.add(loaded_face);
-        console.log('loaded', { loaded_face }, fontName, this, window.pbnView);
+        document.fonts.add(loadedFace);
+        console.log('loaded', { loadedFace }, fontName, this, window.pbnView);
         this.fontFamily = `font-family: ${fontName};`;
       })
       .catch(function (error) {
