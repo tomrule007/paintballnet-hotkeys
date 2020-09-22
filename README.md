@@ -8,7 +8,7 @@ Bookmarklet that allows users to create hotkeys for paintballnet.net",
 
 1.  Goto [bookmarklet page](https://tomrule007.github.io/paintballnet-hotkeys/build/index.html) and copy `PBN-Hotkeys` link to your browser bookmarks.
 
-    \* Also available [Beta bookmarklet page](./beta-build/index.html) with `combat-text and hotkeys`
+    \* Also available [Beta bookmarklet page](https://tomrule007.github.io/paintballnet-hotkeys/beta-build/index.html) with `combat-text and hotkeys`
 
 2.  With `paintballnet.net/play` tab active click the `PBN-Hotkeys` bookmark
 
