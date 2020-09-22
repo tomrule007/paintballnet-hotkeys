@@ -7,7 +7,9 @@ describe('View', () => {
   beforeEach(() => {
     // Set up blank mock dom
     document.body.innerHTML = '<div> </div>';
-
+    global.FontFace = jest
+      .fn()
+      .mockImplementation(() => ({ load: () => Promise.reject('fake error') }));
     // Run UI generating code
     view = new View();
     // view.createUI();
