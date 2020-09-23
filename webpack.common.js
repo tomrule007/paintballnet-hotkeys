@@ -21,6 +21,12 @@ module.exports = {
         },
       },
       {
+        test: /\.ttf$/,
+        use: {
+          loader: 'url-loader',
+        },
+      },
+      {
         test: /\.css$/,
         use: [
           'style-loader',
