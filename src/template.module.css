@@ -3,6 +3,21 @@
   src: url('./fonts/adventure.ttf') format('truetype');
 }
 
+@keyframes inAndUp {
+  0% {
+    transform: scale3d(1.5, 1.5, 1.5);
+  }
+
+  5% {
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-1300%);
+    opacity: 0;
+  }
+}
+
 .pbnMenuLink {
   font-family: 'adventure';
   position: fixed;
@@ -90,5 +105,14 @@
   transform: translateZ(1px);
 }
 .pbnHud > * {
+  backface-visibility: hidden;
+  perspective: 1000;
+  transform: translate3d(0, 0, 0);
+  pointer-events: none;
+  position: absolute;
+  bottom: 0;
+  transform-style: preserve-3d;
   font-family: inherit;
+  animation: inAndUp 2s ease-in;
+  animation-fill-mode: forwards;
 }

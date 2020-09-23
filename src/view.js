@@ -144,12 +144,6 @@ export default class View {
   _createHudMessage({ text, time = 2000 } = {}) {
     const textEl = document.createElement('h1');
     textEl.innerText = text;
-    textEl.style.cssText = `
-    margin: 0 0;
-    perspective: inherit;
-    transform-style: preserve-3d;
-    transform: translateZ(1px);
-    pointer-events: none;`;
     this.$hud.appendChild(textEl);
     setTimeout(() => {
       this.$hud.removeChild(textEl);
