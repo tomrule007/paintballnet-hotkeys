@@ -1,4 +1,10 @@
+@font-face {
+  font-family: 'adventure';
+  src: url('./fonts/adventure.ttf') format('truetype');
+}
+
 .pbnMenuLink {
+  font-family: 'adventure';
   position: fixed;
   z-index: 1000;
   top: 2px;
@@ -67,6 +73,7 @@
 }
 
 .pbnHud {
+  font-family: 'adventure';
   position: absolute;
   top: 0px;
   left: 0px;
@@ -81,4 +88,7 @@
   perspective: inherit;
   transform-style: preserve-3d;
   transform: translateZ(1px);
+}
+.pbnHud > * {
+  font-family: inherit;
 }
