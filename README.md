@@ -1,6 +1,6 @@
-# paintballnet-hotkeys 1.2.0
+# paintballnet-hotkeys 1.2.0 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Bookmarklet that allows users to create hotkeys for paintballnet.net",
+Bookmarklet that allows users to create hotkeys for paintballnet.net
 
 ---
 
@@ -62,3 +62,11 @@ generates a single `build/index.html` file with bookmarklet link that can be hos
 - 1.0.0: First version with hard bound hotkeys
 - 1.1.0: Rough working UI (still missing lots of features and buggy)
 - 1.2.0: UI is fully functioning! User can Create, Update, Save and Delete custom hotkeys
+
+## Authors
+
+- **Thomas J. Herzog** - [https://github.com/tomrule007](https://github.com/tomrule007)
+
+## License 📄
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
