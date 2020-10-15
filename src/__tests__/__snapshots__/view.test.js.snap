@@ -6,7 +6,7 @@ exports[`View Initializes UI to matches snapshot 1`] = `
      
   </div>
   <div
-    class="TPBTOverlayScrollItem TPBTOverlayScrollInfoItem src-pbnMenuLink-2Sn21qZw80"
+    class="TPBTOverlayScrollItem TPBTOverlayScrollInfoItem src-_template-module_pbnMenuLink"
   >
     <a
       id="pbnHotkeysLink"
@@ -18,11 +18,11 @@ hotkeys by tomrule007"
     </a>
   </div>
   <div
-    class="TW3Panel TW3ContainerBorder TW3ContainerBackground src-pbnMenu-3KaM3jmJti src-hidden-3NJn0m3iPS"
+    class="TW3Panel TW3ContainerBorder TW3ContainerBackground src-_template-module_pbnMenu src-_template-module_hidden"
     id="pbnHotkeysMenu"
   >
     <div
-      class="src-pbnMenuBar-3PUwrmT4F1"
+      class="src-_template-module_pbnMenuBar"
     >
       <span
         class="tw3label"
@@ -30,21 +30,21 @@ hotkeys by tomrule007"
         Paintballnet-Hotkeys by tomrule007
       </span>
       <button
-        class="TW3Button TW3ButtonBackground TW3ButtonBorder src-pbnMenuButton-1Vcc5XIL4J"
+        class="TW3Button TW3ButtonBackground TW3ButtonBorder src-_template-module_pbnMenuButton"
         id="pbnHotkeysMenuCloseButton"
       >
         X
       </button>
     </div>
     <div
-      class="TPBTListBox src-pbnMenuContent-1IaSupLvP-"
+      class="TPBTListBox src-_template-module_pbnMenuContent"
       id="pbnHotkeyMenuDisplay"
     />
     <div
-      class="src-pbnMenuFooter-3dR5-h_yrN"
+      class="src-_template-module_pbnMenuFooter"
     >
       <button
-        class="TW3Button TW3ButtonBackground TW3ButtonBorder src-pbnMenuButton-1Vcc5XIL4J"
+        class="TW3Button TW3ButtonBackground TW3ButtonBorder src-_template-module_pbnMenuButton"
         id="pbnHotkeysMenuSaveButton"
       >
         Save Changes
@@ -52,7 +52,7 @@ hotkeys by tomrule007"
     </div>
   </div>
   <div
-    class="src-pbnHud-3PLubKeqel"
+    class="src-_template-module_pbnHud"
   />
 </body>
 `;
